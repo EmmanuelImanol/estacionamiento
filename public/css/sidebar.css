@@ -386,3 +386,31 @@ body {
 }
 
 .sidebar-badge-counter.zero { background: #374151; }
+
+@media (max-width: 768px) {
+    .sidebar {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        height: 100dvh; /* dynamic viewport height — fix para móviles */
+        overflow: hidden;
+    }
+ 
+    .sidebar-nav {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        /* Espacio extra al final para que no tape el footer */
+        padding-bottom: 0.5rem;
+    }
+ 
+    .sidebar-footer {
+        flex-shrink: 0;  /* nunca se comprime */
+        position: relative;
+        z-index: 1;
+        /* Sombra para separarlo visualmente del nav */
+        box-shadow: 0 -1px 0 rgba(255,255,255,0.06);
+        /* Padding extra para safe area en iPhones con notch */
+        padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    }
+}
