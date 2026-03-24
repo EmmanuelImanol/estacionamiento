@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Estacionamiento</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/animaciones.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/modales.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+
+    <div class="mobile-topbar" id="mobile-topbar"></div>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <div class="main-content">
+        <div class="main-inner">
+
+            <!-- Topbar interno -->
+            <div class="topbar">
+                <h1>📊 Dashboard</h1>
+                <div class="topbar-right">
+                    <span id="nombre-usuario"></span>
+                    <span id="badge-rol" class="badge-rol"></span>
+                    <button id="btn-logout" class="btn-sm btn-outline">Cerrar sesión</button>
+                </div>
+            </div>
+
+            <!-- Tarjetas de resumen -->
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card"><div class="stat-icon">🚗</div><div class="stat-valor skeleton">&nbsp;</div><div class="stat-label">Autos hoy</div></div>
+                <div class="stat-card"><div class="stat-icon">🟢</div><div class="stat-valor skeleton">&nbsp;</div><div class="stat-label">Adentro ahora</div></div>
+                <div class="stat-card"><div class="stat-icon">🏁</div><div class="stat-valor skeleton">&nbsp;</div><div class="stat-label">Salidas hoy</div></div>
+                <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-valor skeleton">&nbsp;</div><div class="stat-label">Ingresos hoy</div></div>
+                <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-valor skeleton">&nbsp;</div><div class="stat-label">Ticket promedio</div></div>
+            </div>
+
+            <!-- Gráfica (solo admin) -->
+            <div class="seccion solo-admin" id="seccion-grafica">
+                <div class="seccion-header">
+                    <h2>📈 Ingresos</h2>
+                    <div class="tabs">
+                        <button class="tab activo" id="tab-horas">Por hora</button>
+                        <button class="tab"        id="tab-dias">Últimos 7 días</button>
+                    </div>
+                </div>
+                <canvas id="grafica-ingresos" height="100"></canvas>
+            </div>
+
+            <!-- Sesiones recientes con filtros -->
+            <div class="seccion">
+                <div class="seccion-header">
+                    <h2>🕒 Sesiones</h2>
+                    <button class="btn-sm btn-outline" id="btn-refrescar">↻ Actualizar</button>
+                </div>
+
+                <!-- Filtros -->
+                <div class="filtros-contenedor">
+                    <div class="filtro-campo">
+                        <label for="filtro-desde">Desde</label>
+                        <input type="date" id="filtro-desde">
+                    </div>
+                    <div class="filtro-campo">
+                        <label for="filtro-hasta">Hasta</label>
+                        <input type="date" id="filtro-hasta">
+                    </div>
+                    <div class="filtro-campo">
+                        <label for="filtro-estado">Estado</label>
+                        <select id="filtro-estado">
+                            <option value="">Todos</option>
+                            <option value="ACTIVA">Activas</option>
+                            <option value="FINALIZADA">Finalizadas</option>
+                        </select>
+                    </div>
+                    <div class="filtro-botones">
+                        <button id="btn-filtrar" class="btn btn-primary"
+                                style="padding:0.45rem 0.9rem; font-size:0.82rem;">
+                            Filtrar
+                        </button>
+                        <button id="btn-limpiar-filtro" class="btn-sm btn-outline">
+                            Limpiar
+                        </button>
+                        <button id="btn-exportar-csv" class="btn-sm btn-outline"
+                                title="Exportar a CSV">
+                            ⬇ CSV
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Resumen del filtro -->
+                <div id="resumen-filtro"
+                     style="display:flex; justify-content:space-between; align-items:center;
+                            font-size:0.82rem; color:#6b7280; margin-bottom:0.75rem; padding:0 0.25rem;">
+                </div>
+
+                <div style="overflow-x:auto;">
+                    <table class="tabla-dashboard">
+                        <thead>
+                            <tr>
+                                <th>Matrícula</th>
+                                <th>Conductor</th>
+                                <th>Entrada</th>
+                                <th>Salida</th>
+                                <th>Tiempo</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-sesiones">
+                            <tr>
+                                <td colspan="7" style="text-align:center; padding:2rem; color:#9ca3af;">
+                                    Cargando...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import { inicializarSidebar } from './js/sidebar.js';
+        inicializarSidebar('dashboard');
+    </script>
+    <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

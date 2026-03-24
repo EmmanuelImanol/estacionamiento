@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Estacionamiento</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/modales.css">
+    <link rel="stylesheet" href="css/animaciones.css">
+    <link rel="stylesheet" href="css/toast.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+
+    <!-- Topbar móvil (sidebar.js la llena) -->
+    <div class="mobile-topbar" id="mobile-topbar"></div>
+
+    <!-- Overlay móvil -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Sidebar (sidebar.js lo llena) -->
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <!-- Contenido principal — ya con la estructura correcta -->
+    <div class="main-content">
+        <div class="main-inner">
+
+            <h1>Sistema de Estacionamiento</h1>
+
+            <div class="buscador-sticky" id="buscador-sticky">
+                <input type="text" id="input-busqueda" placeholder="Buscar matrícula...">
+            </div>
+
+            <form id="parking-form" class="form-group">
+                <label for="matricula">Matrícula del Vehículo</label>
+                <input type="text" id="matricula" placeholder="Ej. ABC123" required autocomplete="off"
+                    pattern="^[A-Za-z0-9]{3,10}$" title="Entre 3 y 10 letras y/o números">
+
+                <div class="button-group">
+                    <button type="submit" id="btn-entrada" class="btn btn-primary" data-action="entrada">
+                        🚗 Registrar Entrada
+                    </button>
+                    <button type="submit" id="btn-buscar" class="btn btn-secondary" data-action="buscar">
+                        🔍 Buscar
+                    </button>
+                </div>
+            </form>
+
+            <div id="resultado" class="resultado oculto"></div>
+
+            <div class="lista-seccion">
+                <h2>Vehículos Estacionados</h2>
+                <div style="overflow-x: auto;">
+                    <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.9rem;">
+                        <thead>
+                            <tr>
+                                <th>Matrícula</th>
+                                <th>Hora de Entrada</th>
+                                <th class="col-acciones">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-vehiculos"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal de salida -->
+    <div id="modal-salida" class="modal-overlay oculto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Salida</h3>
+            </div>
+            <div class="modal-body">
+                <div class="modal-info">
+                    <span id="modal-matricula-texto"></span>
+                </div>
+                <div class="modal-detalles" style="font-size:0.9rem; color:#4b5563; line-height:1.6;">
+                    <p>🕒 Entrada: <span id="modal-entrada-texto"></span></p>
+                    <p>⏳ Tiempo: <span id="modal-tiempo-texto"></span></p>
+                </div>
+                <p style="margin-top:1rem; font-weight:500;">¿Confirmar el cobro ahora?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-modal-cancelar" class="btn btn-cancelar">Cancelar</button>
+                <button id="btn-modal-confirmar" class="btn btn-secondary">Confirmar Salida</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { inicializarSidebar } from './js/sidebar.js';
+        inicializarSidebar('operaciones');
+    </script>
+    <script type="module" src="app.js"></script>
+
+    <div id="modal-cliente" class="modal-overlay oculto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📝 Registrar Cliente</h3>
+                <button class="modal-cerrar" id="btn-cerrar-modal-cliente">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:0.85rem; color:#6b7280; margin-bottom:1rem;">
+                    Ingresa el nombre del conductor para la matrícula
+                    <strong id="modal-cliente-matricula" style="color:#2563eb;"></strong>
+                </p>
+                <div style="display:flex; flex-direction:column; gap:0.35rem;">
+                    <label for="modal-cliente-nombre" style="font-size:0.8rem; font-weight:600; color:#374151;">
+                        Nombre completo
+                    </label>
+                    <input type="text" id="modal-cliente-nombre" placeholder="Ej. Juan Pérez" style="padding:0.7rem; border:1px solid #e5e7eb; border-radius:6px;
+                           font-size:0.9rem; text-transform:none; width:100%;">
+                </div>
+                <div id="modal-cliente-msg" style="display:none; margin-top:0.75rem; font-size:0.8rem; 
+                        padding:0.5rem 0.75rem; border-radius:6px;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancelar" id="btn-cancelar-modal-cliente">
+                    Cancelar
+                </button>
+                <button class="btn btn-primary" id="btn-guardar-modal-cliente">
+                    Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

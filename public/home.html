@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio — Estacionamiento</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/animaciones.css">
+    <link rel="stylesheet" href="css/toast.css">
+    <style>
+        .bienvenida {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.75rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .bienvenida-texto h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-color);
+            letter-spacing: -0.02em;
+        }
+
+        .bienvenida-texto p {
+            font-size: 0.85rem;
+            color: var(--text-secondary, #6b7280);
+            margin-top: 0.2rem;
+        }
+
+        .fecha-badge {
+            background: var(--card-bg, white);
+            border: 0.5px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.5rem 0.875rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary, #6b7280);
+            font-weight: 500;
+        }
+
+        /* Stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg, white);
+            border: 0.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--stat-color, var(--primary-color));
+            border-radius: 12px 12px 0 0;
+        }
+
+        .stat-icon {
+            font-size: 1.3rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .stat-valor {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--stat-color, var(--primary-color));
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary, #6b7280);
+            margin-top: 0.3rem;
+        }
+
+        /* Acceso rápido */
+        .accesos-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .acceso-card {
+            background: var(--card-bg, white);
+            border: 0.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .acceso-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(37,99,235,0.1);
+        }
+
+        .acceso-icono {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .acceso-texto h3 {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .acceso-texto p {
+            font-size: 0.75rem;
+            color: var(--text-secondary, #6b7280);
+            margin-top: 0.1rem;
+        }
+
+        /* Tabla autos activos */
+        .seccion {
+            background: var(--card-bg, white);
+            border: 0.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .seccion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .seccion-header h2 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0;
+        }
+
+        .dot-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.72rem;
+            color: #059669;
+            font-weight: 600;
+        }
+
+        .dot-live::before {
+            content: '';
+            display: block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+        th {
+            background: #f9fafb;
+            padding: 0.6rem 0.75rem;
+            text-align: left;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #6b7280;
+            border-bottom: 1px solid var(--border-color);
+        }
+        td { padding: 0.7rem 0.75rem; border-bottom: 1px solid #f3f4f6; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f9fafb; }
+
+        .badge-matricula {
+            background: #e0e7ff;
+            color: #4338ca;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 700;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+
+        .btn-cobrar {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.15s;
+            text-decoration: none;
+        }
+
+        .btn-cobrar:hover { background: #d1fae5; }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-topbar" id="mobile-topbar"></div>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <div class="main-content">
+        <div class="main-inner">
+
+            <!-- Bienvenida -->
+            <div class="bienvenida">
+                <div class="bienvenida-texto">
+                    <h1 id="saludo">Buen día 👋</h1>
+                    <p id="fecha-actual"></p>
+                </div>
+                <div class="fecha-badge" id="reloj">--:--</div>
+            </div>
+
+            <!-- Stats del día -->
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card" style="--stat-color:#2563eb;">
+                    <div class="stat-icon">🚗</div>
+                    <div class="stat-valor skeleton">&nbsp;</div>
+                    <div class="stat-label">Autos hoy</div>
+                </div>
+                <div class="stat-card" style="--stat-color:#22c55e;">
+                    <div class="stat-icon">🟢</div>
+                    <div class="stat-valor skeleton">&nbsp;</div>
+                    <div class="stat-label">Adentro ahora</div>
+                </div>
+                <div class="stat-card" style="--stat-color:#f59e0b;">
+                    <div class="stat-icon">🏁</div>
+                    <div class="stat-valor skeleton">&nbsp;</div>
+                    <div class="stat-label">Salidas hoy</div>
+                </div>
+                <div class="stat-card" style="--stat-color:#059669;">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-valor skeleton">&nbsp;</div>
+                    <div class="stat-label">Ingresos hoy</div>
+                </div>
+            </div>
+
+            <!-- Accesos rápidos -->
+            <div class="accesos-grid">
+                <a href="operaciones.html" class="acceso-card">
+                    <div class="acceso-icono" style="background:#eff6ff;">🎫</div>
+                    <div class="acceso-texto">
+                        <h3>Registrar Entrada</h3>
+                        <p>Nuevo acceso al estacionamiento</p>
+                    </div>
+                </a>
+                <a href="dashboard.html" class="acceso-card">
+                    <div class="acceso-icono" style="background:#f0fdf4;">📊</div>
+                    <div class="acceso-texto">
+                        <h3>Dashboard</h3>
+                        <p>Reportes e ingresos</p>
+                    </div>
+                </a>
+                <a href="frecuentes.html" class="acceso-card">
+                    <div class="acceso-icono" style="background:#fffbeb;">⭐</div>
+                    <div class="acceso-texto">
+                        <h3>Frecuentes</h3>
+                        <p>Clientes registrados</p>
+                    </div>
+                </a>
+                <a href="usuarios.html" class="acceso-card solo-admin" style="display:none;">
+                    <div class="acceso-icono" style="background:#fdf4ff;">👥</div>
+                    <div class="acceso-texto">
+                        <h3>Usuarios</h3>
+                        <p>Gestión del equipo</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Autos activos -->
+            <div class="seccion">
+                <div class="seccion-header">
+                    <h2>Vehículos en el estacionamiento</h2>
+                    <span class="dot-live">En tiempo real</span>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Matrícula</th>
+                                <th>Entrada</th>
+                                <th>Tiempo</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-activos">
+                            <tr><td colspan="4" style="text-align:center;padding:2rem;color:#9ca3af;">Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import { inicializarSidebar } from './js/sidebar.js';
+        inicializarSidebar('home');
+    </script>
+    <script type="module">
+        import { ParkingAPI } from './api.js';
+        import { moneda, formatearFechaHora, calcularEstancia } from './js/utils.js';
+
+        const rol    = sessionStorage.getItem('usuario_rol')    || '';
+        const nombre = sessionStorage.getItem('usuario_nombre') || '';
+
+        // Saludo dinámico
+        const hora = new Date().getHours();
+        const saludo = hora < 12 ? 'Buenos días' : hora < 19 ? 'Buenas tardes' : 'Buenas noches';
+        document.getElementById('saludo').textContent = `${saludo}, ${nombre.split(' ')[0]} 👋`;
+
+        // Fecha
+        const hoy = new Date();
+        document.getElementById('fecha-actual').textContent =
+            hoy.toLocaleDateString('es-MX', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+        // Reloj
+        function actualizarReloj() {
+            document.getElementById('reloj').textContent =
+                new Date().toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true });
+        }
+        actualizarReloj();
+        setInterval(actualizarReloj, 1000);
+
+        // Mostrar admin links
+        if (rol === 'admin') {
+            document.querySelectorAll('.solo-admin').forEach(el => el.style.display = 'flex');
+        }
+
+        // Cargar stats
+        async function cargarStats() {
+            try {
+                const d = await ParkingAPI.obtenerResumenDia();
+                const colores = ['#2563eb','#22c55e','#f59e0b','#059669'];
+                const stats   = [
+                    { valor: d.total_autos_hoy, label: 'Autos hoy',     icono: '🚗' },
+                    { valor: d.autos_adentro,   label: 'Adentro ahora', icono: '🟢' },
+                    { valor: d.autos_salidos,   label: 'Salidas hoy',   icono: '🏁' },
+                    { valor: moneda(d.ingresos_hoy), label: 'Ingresos hoy', icono: '💰' },
+                ];
+                document.getElementById('stats-grid').innerHTML = stats.map((s, i) => `
+                    <div class="stat-card" style="--stat-color:${colores[i]}">
+                        <div class="stat-icon">${s.icono}</div>
+                        <div class="stat-valor">${s.valor}</div>
+                        <div class="stat-label">${s.label}</div>
+                    </div>
+                `).join('');
+            } catch(e) { console.error(e); }
+        }
+
+        // Cargar activos
+        async function cargarActivos() {
+            const tbody = document.getElementById('tbody-activos');
+            try {
+                const autos = await ParkingAPI.obtenerVehiculosActivos();
+                if (!autos.length) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:2rem;color:#9ca3af;">Sin vehículos estacionados</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = autos.map(a => {
+                    const { fechaParte, horaParte, esAntiguo } = formatearFechaHora(a.hora_entrada);
+                    return `
+                        <tr>
+                            <td><span class="badge-matricula">${a.matricula}</span></td>
+                            <td>
+                                <div style="font-size:0.78rem;color:#9ca3af;">${fechaParte}</div>
+                                <div style="font-weight:600;">${horaParte}</div>
+                            </td>
+                            <td style="color:${esAntiguo?'#ef4444':'#6b7280'};font-weight:${esAntiguo?'600':'400'};">
+                                ${esAntiguo ? '⚠️ ' : ''}${calcularEstancia(a.hora_entrada)}
+                            </td>
+                            <td>
+                                <a href="operaciones.html" class="btn-cobrar">Cobrar</a>
+                            </td>
+                        </tr>`;
+                }).join('');
+            } catch(e) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#ef4444;">Error al cargar</td></tr>';
+            }
+        }
+
+        cargarStats();
+        cargarActivos();
+        setInterval(() => { cargarStats(); cargarActivos(); }, 30000);
+    </script>
+</body>
+</html>

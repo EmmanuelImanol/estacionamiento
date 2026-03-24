@@ -1,0 +1,388 @@
+/* ── Variables del sidebar ──────────────────────────────────── */
+:root {
+    --sidebar-width: 240px;
+    --sidebar-bg: #0f172a;
+    --sidebar-text: #94a3b8;
+    --sidebar-text-hover: #f1f5f9;
+    --sidebar-active-bg: rgba(37, 99, 235, 0.15);
+    --sidebar-active-text: #60a5fa;
+    --sidebar-active-border: #2563eb;
+    --sidebar-header-text: #f1f5f9;
+    --topbar-height: 56px;
+}
+
+/* ── Reset del body para layout con sidebar ─────────────────── */
+body {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--bg-color);
+    align-items: stretch;
+    padding: 0;
+}
+
+/* ── Sidebar ────────────────────────────────────────────────── */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--sidebar-bg);
+    display: flex;
+    flex-direction: column;
+    z-index: 200;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+/* Logo / Brand */
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.25rem 1.25rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    text-decoration: none;
+}
+
+.sidebar-brand-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--primary-color);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.sidebar-brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.sidebar-brand-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--sidebar-header-text);
+    letter-spacing: -0.01em;
+}
+
+.sidebar-brand-sub {
+    font-size: 0.65rem;
+    color: var(--sidebar-text);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* Secciones de navegación */
+.sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.75rem 0;
+    scrollbar-width: none;
+}
+
+.sidebar-nav::-webkit-scrollbar { display: none; }
+
+.sidebar-section-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #475569;
+    padding: 0.75rem 1.25rem 0.35rem;
+}
+
+/* Links de navegación */
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1.25rem;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-left: 3px solid transparent;
+    transition: all 0.15s ease;
+    cursor: pointer;
+    background: none;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+    width: 100%;
+    text-align: left;
+}
+
+.sidebar-link:hover {
+    color: var(--sidebar-text-hover);
+    background: rgba(255,255,255,0.05);
+    border-left-color: rgba(255,255,255,0.1);
+}
+
+.sidebar-link.active {
+    color: var(--sidebar-active-text);
+    background: var(--sidebar-active-bg);
+    border-left-color: var(--sidebar-active-border);
+}
+
+.sidebar-link-icon {
+    font-size: 1rem;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.sidebar-link-label { flex: 1; }
+
+.sidebar-link-badge {
+    font-size: 0.65rem;
+    background: var(--primary-color);
+    color: white;
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    font-weight: 700;
+}
+
+/* Separador */
+.sidebar-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 0.5rem 0;
+}
+
+/* Footer del sidebar: info de usuario */
+.sidebar-footer {
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.sidebar-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+}
+
+.sidebar-user-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.sidebar-user-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--sidebar-header-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidebar-user-rol {
+    font-size: 0.65rem;
+    color: var(--sidebar-text);
+    text-transform: capitalize;
+}
+
+.sidebar-logout-btn {
+    background: none;
+    border: none;
+    color: #475569;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    line-height: 1;
+    transition: color 0.15s;
+}
+
+.sidebar-logout-btn:hover { color: #ef4444; }
+
+/* ── Topbar móvil ───────────────────────────────────────────── */
+.mobile-topbar {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--topbar-height);
+    background: var(--sidebar-bg);
+    align-items: center;
+    padding: 0 1rem;
+    gap: 1rem;
+    z-index: 199;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.mobile-topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    text-decoration: none;
+}
+
+.mobile-topbar-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--sidebar-header-text);
+}
+
+.hamburger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 4px;
+}
+
+.hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--sidebar-text);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── Overlay móvil ──────────────────────────────────────────── */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 199;
+    backdrop-filter: blur(2px);
+}
+
+.sidebar-overlay.visible { display: block; }
+
+/* ── Contenido principal ────────────────────────────────────── */
+.main-content {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.main-inner {
+    padding: 2rem 1.5rem;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* ── Responsivo ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+    }
+
+    .mobile-topbar {
+        display: flex;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding-top: var(--topbar-height);
+    }
+
+    .main-inner {
+        padding: 1.25rem 1rem;
+    }
+}
+
+/* ── AGREGAR AL FINAL DE css/sidebar.css ─────────────────────
+   Estilos para el toggle de modo oscuro y badge de contador    */
+
+/* Toggle modo oscuro */
+.dark-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    cursor: pointer;
+    user-select: none;
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    transition: background 0.15s;
+}
+
+.dark-toggle:hover { background: rgba(255,255,255,0.04); }
+
+.dark-toggle-label {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    flex: 1;
+}
+
+.dark-toggle-track {
+    width: 32px;
+    height: 18px;
+    background: #374151;
+    border-radius: 999px;
+    position: relative;
+    transition: background 0.2s ease;
+    flex-shrink: 0;
+}
+
+.dark-toggle-track.activo { background: #2563eb; }
+
+.dark-toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dark-toggle-track.activo .dark-toggle-thumb {
+    transform: translateX(14px);
+}
+
+/* Badge contador de autos */
+.sidebar-badge-counter {
+    background: #22c55e;
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    margin-left: auto;
+    min-width: 18px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.sidebar-badge-counter.zero { background: #374151; }

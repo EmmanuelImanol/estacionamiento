@@ -1,0 +1,192 @@
+/* css/login.css — Estilos de la página de login */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0f172a;
+    font-family: system-ui, -apple-system, sans-serif;
+    padding: 1rem;
+}
+
+/* Fondo con patrón de cuadrícula */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(37, 99, 235, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(37, 99, 235, 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+}
+
+/* Gradiente radial centrado */
+body::after {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* ── Wrapper ─────────────────────────────────────────────────── */
+.login-wrapper {
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    z-index: 1;
+    animation: fadeSlideUp 0.4s ease both;
+}
+
+/* ── Header del negocio ──────────────────────────────────────── */
+.negocio-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.negocio-logo {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.75rem;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+}
+
+.negocio-nombre {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    letter-spacing: -0.02em;
+}
+
+.negocio-subtitulo {
+    font-size: 0.8rem;
+    color: #475569;
+    margin-top: 0.25rem;
+}
+
+/* ── Card del formulario ─────────────────────────────────────── */
+.login-card {
+    background: #1e293b;
+    border: 0.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.login-card h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin-bottom: 0.35rem;
+}
+
+.login-card p {
+    font-size: 0.82rem;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+}
+
+/* ── Campos ──────────────────────────────────────────────────── */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: #273548;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    color: #f1f5f9;
+    font-size: 0.9rem;
+    text-transform: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.form-group input::placeholder { color: #475569; }
+
+/* ── Error box ───────────────────────────────────────────────── */
+.error-box {
+    background: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    border-radius: 8px;
+    padding: 0.65rem 0.875rem;
+    font-size: 0.82rem;
+    color: #fca5a5;
+    margin-bottom: 1rem;
+    display: none;
+}
+
+/* ── Botón ───────────────────────────────────────────────────── */
+.btn-login {
+    width: 100%;
+    padding: 0.8rem;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: all 0.15s ease;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.btn-login:hover:not(:disabled) {
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+    transform: translateY(-1px);
+}
+
+.btn-login:active   { transform: scale(0.98); }
+
+.btn-login:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.login-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    color: #334155;
+}
+
+/* ── Animación ───────────────────────────────────────────────── */
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}

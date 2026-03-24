@@ -1,0 +1,271 @@
+/* ── Encabezado de página ───────────────────────────────────── */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.page-header h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem;
+    color: var(--text-color);
+}
+
+.page-subtitle {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* ── Tarjeta sección ────────────────────────────────────────── */
+.card-seccion {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.seccion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+.seccion-header h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-color);
+}
+
+/* ── Formulario ─────────────────────────────────────────────── */
+.form-usuarios {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.form-field label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.form-field input,
+.form-field select {
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    text-transform: none;
+    background: white;
+    transition: border-color 0.2s;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* ── Mensaje de feedback ────────────────────────────────────── */
+.usuario-msg {
+    padding: 0.65rem 0.85rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+}
+
+.usuario-msg.oculto  { display: none; }
+.usuario-msg.exito   { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+.usuario-msg.error   { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* ── Botones pequeños ───────────────────────────────────────── */
+.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-outline {
+    background: white;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.btn-outline:hover { background: #f3f4f6; }
+
+.btn-danger {
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.15s;
+}
+
+.btn-editar {
+    background: #eff6ff;
+    color: #2563eb;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.btn-editar:hover { background: #dbeafe; }
+
+.btn-danger:hover { background: #fca5a5; }
+
+/* ── Tabla de usuarios ──────────────────────────────────────── */
+.tabla-usuarios {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.tabla-usuarios th {
+    background: #f9fafb;
+    padding: 0.65rem 0.75rem;
+    text-align: left;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    border-bottom: 2px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.tabla-usuarios td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #f3f4f6;
+    color: var(--text-color);
+}
+
+.tabla-usuarios tr:last-child td { border-bottom: none; }
+.tabla-usuarios tr:hover td      { background: #f9fafb; }
+
+.col-accion { text-align: center; width: 90px; }
+
+.td-cargando {
+    text-align: center;
+    padding: 2.5rem;
+    color: #9ca3af;
+    font-size: 0.875rem;
+}
+
+/* ── Badges ─────────────────────────────────────────────────── */
+.badge-rol {
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.badge-admin  { background: #ede9fe; color: #6d28d9; }
+.badge-cajero { background: #d1fae5; color: #065f46; }
+
+.badge-activo   { background: #d1fae5; color: #065f46; font-size: 0.72rem; padding: 0.2rem 0.5rem; border-radius: 999px; font-weight: 600; }
+.badge-inactivo { background: #f3f4f6; color: #9ca3af; font-size: 0.72rem; padding: 0.2rem 0.5rem; border-radius: 999px; font-weight: 600; }
+
+/* ── Modal de edición ───────────────────────────────────────── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 300;
+    backdrop-filter: blur(2px);
+}
+
+.modal-overlay.oculto { display: none; }
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 440px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.modal-cerrar {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #9ca3af;
+    padding: 0.25rem;
+    border-radius: 4px;
+    line-height: 1;
+    transition: color 0.15s;
+}
+
+.modal-cerrar:hover { color: #ef4444; }
+
+.modal-body {
+    padding: 1.25rem;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--border-color);
+    background: #f9fafb;
+}
+
+/* ── Responsivo ─────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .form-usuarios {
+        grid-template-columns: 1fr;
+    }
+
+    .tabla-usuarios th:nth-child(2),
+    .tabla-usuarios td:nth-child(2) {
+        display: none; /* oculta el correo en pantallas muy pequeñas */
+    }
+}
