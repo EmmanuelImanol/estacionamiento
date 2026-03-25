@@ -1,0 +1,44 @@
+/* ── AGREGAR AL FINAL DE css/configuracion.css ───────────────
+   Estilos para el módulo de tarifas                           */
+
+.tarifa-bloque {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tarifa-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.tarifa-info {
+    flex: 1;
+}
+
+.tarifa-nombre {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-color);
+    display: block;
+}
+
+.tarifa-desc {
+    font-size: 0.75rem;
+    color: #6b7280;
+    display: block;
+    margin-top: 0.15rem;
+}
+
+.tarifa-campos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.75rem;
+    padding-left: 0.25rem;
+}
+
+/* Modo oscuro */
+.dark-mode .tarifa-bloque  { border-color: rgba(255,255,255,0.06); }
+.dark-mode .tarifa-nombre  { color: var(--text-color); }
+.dark-mode .tarifa-desc    { color: #475569; }

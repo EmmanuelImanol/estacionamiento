@@ -162,6 +162,11 @@ switch ($action) {
         $authController->desactivarUsuario();
         break;
 
+    case 'tarifas':
+        AuthMiddleware::verificar();
+        $parkingController->obtenerTarifas();
+        break;
+
     case 'config.obtener':
         AuthMiddleware::verificar();
         $configController->obtener();

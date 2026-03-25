@@ -37,7 +37,13 @@ class ConfigController {
             'ticket_titulo_entrada', 'ticket_titulo_salida',
             'ticket_pie_entrada', 'ticket_pie_salida',
             'ticket_mostrar_qr', 'ticket_mostrar_frecuente',
-            'ticket_color'
+            'ticket_color',
+            // Tarifas
+            'tarifa_normal_precio', 'tarifa_normal_activa',
+            'tarifa_fraccion_minutos', 'tarifa_fraccion_precio', 'tarifa_fraccion_activa',
+            'tarifa_nocturna_precio', 'tarifa_nocturna_hora_inicio',
+            'tarifa_nocturna_hora_fin', 'tarifa_nocturna_activa',
+            'tarifa_dia_maximo', 'tarifa_dia_activa',
         ];
 
         // Filtrar solo las claves permitidas

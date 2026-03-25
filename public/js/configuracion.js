@@ -41,6 +41,20 @@ function configurarToggle(trackId, inputId) {
 const setQR        = configurarToggle('track-qr',        'ticket_mostrar_qr');
 const setFrecuente = configurarToggle('track-frecuente', 'ticket_mostrar_frecuente');
 
+// Función genérica para toggles de tarifas
+function setToggle(trackId, inputId, valor) {
+    const track = document.getElementById(trackId);
+    const input = document.getElementById(inputId);
+    if (!track || !input) return;
+    track.classList.toggle('activo', valor === '1');
+    input.value = valor;
+    track.addEventListener('click', () => {
+        const nuevo = input.value === '1' ? '0' : '1';
+        track.classList.toggle('activo', nuevo === '1');
+        input.value = nuevo;
+    });
+}
+
 // ── Sincronizar color picker ──────────────────────────────────
 const colorPicker = document.getElementById('ticket_color');
 const colorHex    = document.getElementById('ticket_color_hex');
@@ -85,9 +99,26 @@ async function cargarConfig() {
             colorHex.value    = config.ticket_color.toUpperCase();
         }
 
-        // Toggles
+        // Toggles ticket
         setQR(config.ticket_mostrar_qr || '1');
         setFrecuente(config.ticket_mostrar_frecuente || '1');
+
+        // Tarifas — toggles
+        setToggle('track-normal-activa',   'tarifa_normal_activa',   config.tarifa_normal_activa   || '1');
+        setToggle('track-fraccion-activa', 'tarifa_fraccion_activa', config.tarifa_fraccion_activa || '0');
+        setToggle('track-nocturna-activa', 'tarifa_nocturna_activa', config.tarifa_nocturna_activa || '0');
+        setToggle('track-dia-activa',      'tarifa_dia_activa',      config.tarifa_dia_activa      || '0');
+
+        // Tarifas — campos numéricos y horarios
+        const camposTarifas = [
+            'tarifa_normal_precio', 'tarifa_fraccion_minutos', 'tarifa_fraccion_precio',
+            'tarifa_nocturna_precio', 'tarifa_nocturna_hora_inicio', 'tarifa_nocturna_hora_fin',
+            'tarifa_dia_maximo'
+        ];
+        camposTarifas.forEach(clave => {
+            const el = document.getElementById(clave);
+            if (el && config[clave] !== undefined) el.value = config[clave];
+        });
 
         actualizarPreview();
     } catch (e) {
@@ -211,6 +242,18 @@ document.getElementById('btn-guardar-todo').addEventListener('click', async () =
         ticket_color:             colorPicker.value,
         ticket_mostrar_qr:        document.getElementById('ticket_mostrar_qr').value,
         ticket_mostrar_frecuente: document.getElementById('ticket_mostrar_frecuente').value,
+        // Tarifas
+        tarifa_normal_precio:          document.getElementById('tarifa_normal_precio')?.value          || '',
+        tarifa_normal_activa:          document.getElementById('tarifa_normal_activa')?.value          || '1',
+        tarifa_fraccion_minutos:       document.getElementById('tarifa_fraccion_minutos')?.value       || '',
+        tarifa_fraccion_precio:        document.getElementById('tarifa_fraccion_precio')?.value        || '',
+        tarifa_fraccion_activa:        document.getElementById('tarifa_fraccion_activa')?.value        || '0',
+        tarifa_nocturna_precio:        document.getElementById('tarifa_nocturna_precio')?.value        || '',
+        tarifa_nocturna_hora_inicio:   document.getElementById('tarifa_nocturna_hora_inicio')?.value   || '',
+        tarifa_nocturna_hora_fin:      document.getElementById('tarifa_nocturna_hora_fin')?.value      || '',
+        tarifa_nocturna_activa:        document.getElementById('tarifa_nocturna_activa')?.value        || '0',
+        tarifa_dia_maximo:             document.getElementById('tarifa_dia_maximo')?.value             || '',
+        tarifa_dia_activa:             document.getElementById('tarifa_dia_activa')?.value             || '0',
     };
 
     try {

@@ -43,8 +43,8 @@ class ParkingRepository
 
         // No existe — crear registro aunque sea sin nombre
         $stmt = $this->db->prepare(
-            "INSERT INTO clientes (matricula, visitas, ultima_visita) 
-            VALUES (:matricula, 1, NOW())"
+            "INSERT INTO clientes (matricula, nombre, visitas, ultima_visita) 
+             VALUES (:matricula, NULL, 1, NOW())"
         );
         $stmt->execute([':matricula' => $matricula]);
 
@@ -121,17 +121,19 @@ class ParkingRepository
         return null;
     }
 
-    public function actualizarSalida(ParkingSession $sesion, float $totalPagado): bool
+    public function actualizarSalida(ParkingSession $sesion, float $totalPagado, string $tipoTarifa = 'normal'): bool
     {
         $query = "UPDATE parking_sessions 
                   SET hora_salida = :hora_salida, 
-                      total_pagado = :total_pagado, 
+                      total_pagado = :total_pagado,
+                      tarifa_tipo = :tarifa_tipo,
                       estado = 'FINALIZADA' 
                   WHERE matricula = :matricula AND estado = 'ACTIVA'";
         $stmt  = $this->db->prepare($query);
         return $stmt->execute([
             ':hora_salida'   => $sesion->getHoraSalida(),
             ':total_pagado'  => $totalPagado,
+            ':tarifa_tipo'   => $tipoTarifa,
             ':matricula'     => $sesion->getMatricula()
         ]);
     }
