@@ -1,5 +1,5 @@
 export class ParkingAPI {
-  static #BASE_URL = 'api.php';
+  static #BASE_URL = '/estacionamiento/api.php';
 
   // ── Operaciones ───────────────────────────────────────────────
 
