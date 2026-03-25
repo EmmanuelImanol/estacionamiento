@@ -62,12 +62,14 @@ spl_autoload_register(function ($class) {
 use App\Controllers\ParkingController;
 use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
+use App\Controllers\ConfigController;
 use App\Middleware\AuthMiddleware;
 use App\Views\JsonResponse;
 
 $parkingController   = new ParkingController();
 $authController      = new AuthController();
 $dashboardController = new DashboardController();
+$configController    = new ConfigController();
 
 $action    = $_GET['action']    ?? '';
 $matricula = $_GET['matricula'] ?? null;
@@ -158,6 +160,15 @@ switch ($action) {
 
     case 'usuarios.desactivar':
         $authController->desactivarUsuario();
+        break;
+
+    case 'config.obtener':
+        AuthMiddleware::verificar();
+        $configController->obtener();
+        break;
+
+    case 'config.guardar':
+        $configController->guardar();
         break;
 
     default:

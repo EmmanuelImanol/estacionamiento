@@ -1,52 +1,84 @@
 // js/ticket.js
 
+// ── Cargar configuración del servidor ─────────────────────────
+let _config = null;
+
+async function obtenerConfig() {
+    if (_config) return _config;
+    try {
+        const url = new URL('/estacionamiento/api.php', window.location.origin);
+        url.searchParams.append('action', 'config.obtener');
+        const res  = await fetch(url);
+        const data = await res.json();
+        _config    = data.data || {};
+    } catch (e) {
+        _config = {};
+    }
+    return _config;
+}
+
+function cfg(clave, defecto = '') {
+    return _config?.[clave] ?? defecto;
+}
+
 // ══════════════════════════════════════════════════════════════
 //  TICKET DE ENTRADA
 // ══════════════════════════════════════════════════════════════
 export async function generarTicketPDF(datos) {
+    await obtenerConfig();
     const { matricula, hora_entrada, nombre_conductor, es_frecuente } = datos;
 
-    const qrData = [
-        matricula,
-        hora_entrada,
-        nombre_conductor || 'N/A',
-        es_frecuente ? '1' : '0'
-    ].join('|');
+    const color         = cfg('ticket_color', '#2D3748');
+    const mostrarQR     = cfg('ticket_mostrar_qr', '1') === '1';
+    const mostrarFrec   = cfg('ticket_mostrar_frecuente', '1') === '1';
+    const titulo        = cfg('ticket_titulo_entrada', 'TICKET DE ENTRADA');
+    const pieMsg        = cfg('ticket_pie_entrada', 'Conserve este ticket hasta la salida');
+    const tarifa        = cfg('tarifa_por_hora', '25.50');
+    const negNombre     = cfg('negocio_nombre', 'Estacionamiento');
+    const negRfc        = cfg('negocio_rfc', '');
+    const negDir        = cfg('negocio_direccion', '');
+    const negCiudad     = cfg('negocio_ciudad', '');
+    const negTel        = cfg('negocio_telefono', '');
+    const negEmail      = cfg('negocio_email', '');
 
-    const qrDataURL = await generarQRDataURL(qrData);
+    let qrDataURL = null;
+    if (mostrarQR) {
+        const qrData = [matricula, hora_entrada, nombre_conductor || 'N/A', es_frecuente ? '1' : '0'].join('|');
+        qrDataURL = await generarQRDataURL(qrData);
+    }
 
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: [80, 215]
-    });
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [80, 215] });
 
     const ancho  = 80;
     const margen = 8;
     let y = 0;
 
+    const rr = parseInt(color.slice(1,3),16);
+    const gg = parseInt(color.slice(3,5),16);
+    const bb = parseInt(color.slice(5,7),16);
+
     // ── Header ───────────────────────────────────────────────
-    doc.setFillColor(45, 55, 72);
+    doc.setFillColor(rr, gg, bb);
     doc.rect(0, 0, ancho, 26, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12);
-    doc.text('ESTACIONAMIENTO', ancho / 2, 11, { align: 'center' });
+    doc.text(negNombre.toUpperCase(), ancho / 2, 11, { align: 'center' });
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(7);
-    doc.setTextColor(160, 174, 192);
-    doc.text('TICKET DE ENTRADA', ancho / 2, 19, { align: 'center' });
+    doc.setTextColor(180, 200, 220);
+    doc.text(titulo, ancho / 2, 19, { align: 'center' });
     y = 34;
 
     // ── Matrícula ─────────────────────────────────────────────
     doc.setFillColor(247, 248, 250);
-    doc.setDrawColor(45, 55, 72);
+    doc.setDrawColor(rr, gg, bb);
     doc.setLineWidth(0.5);
     doc.roundedRect(margen, y - 6, ancho - margen * 2, 16, 3, 3, 'FD');
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(22);
-    doc.setTextColor(45, 55, 72);
+    doc.setTextColor(rr, gg, bb);
     doc.text(matricula, ancho / 2, y + 5, { align: 'center' });
     y += 18;
 
@@ -67,7 +99,7 @@ export async function generarTicketPDF(datos) {
     doc.setTextColor(30, 30, 30);
     doc.text(nombre_conductor || 'No registrado', margen, y);
 
-    if (es_frecuente) {
+    if (es_frecuente && mostrarFrec) {
         doc.setFillColor(254, 243, 199);
         doc.setDrawColor(251, 191, 36);
         doc.setLineWidth(0.3);
@@ -93,7 +125,7 @@ export async function generarTicketPDF(datos) {
     y += 6;
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(13);
-    doc.setTextColor(45, 55, 72);
+    doc.setTextColor(rr, gg, bb);
     doc.text(fe.hora, margen, y);
     y += 10;
 
@@ -106,14 +138,16 @@ export async function generarTicketPDF(datos) {
     y += 8;
 
     // ── QR Code ───────────────────────────────────────────────
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(6.5);
-    doc.setTextColor(150, 150, 150);
-    doc.text('ESCANEAR AL SALIR', ancho / 2, y, { align: 'center' });
-    y += 4;
-    const qrSize = 40;
-    doc.addImage(qrDataURL, 'PNG', (ancho - qrSize) / 2, y, qrSize, qrSize);
-    y += qrSize + 6;
+    if (mostrarQR && qrDataURL) {
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(6.5);
+        doc.setTextColor(150, 150, 150);
+        doc.text('ESCANEAR AL SALIR', ancho / 2, y, { align: 'center' });
+        y += 4;
+        const qrSize = 40;
+        doc.addImage(qrDataURL, 'PNG', (ancho - qrSize) / 2, y, qrSize, qrSize);
+        y += qrSize + 6;
+    }
 
     // ── Nota ──────────────────────────────────────────────────
     doc.setDrawColor(230, 230, 230);
@@ -123,13 +157,13 @@ export async function generarTicketPDF(datos) {
     doc.setFontSize(6.5);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(170, 170, 170);
-    doc.text('Conserve este ticket hasta la salida', ancho / 2, y, { align: 'center' });
+    doc.text(pieMsg, ancho / 2, y, { align: 'center' });
     y += 4;
-    doc.text('Tarifa: $25.50 MXN / hora', ancho / 2, y, { align: 'center' });
+    doc.text(`Tarifa: $${tarifa} MXN / hora`, ancho / 2, y, { align: 'center' });
     y += 8;
 
     // ── Datos del negocio ─────────────────────────────────────
-    agregarDatosNegocio(doc, ancho, margen, y);
+    agregarDatosNegocio(doc, ancho, margen, y, negNombre, negRfc, negDir, negCiudad, negTel, negEmail, rr, gg, bb);
 
     doc.save(`ticket-entrada-${matricula}-${Date.now()}.pdf`);
 }
@@ -137,7 +171,8 @@ export async function generarTicketPDF(datos) {
 // ══════════════════════════════════════════════════════════════
 //  COMPROBANTE DE SALIDA
 // ══════════════════════════════════════════════════════════════
-export function generarComprobanteSalidaPDF(datos) {
+export async function generarComprobanteSalidaPDF(datos) {
+    await obtenerConfig();
     const {
         matricula,
         hora_entrada,
@@ -146,6 +181,16 @@ export function generarComprobanteSalidaPDF(datos) {
         total_pagar,
         nombre_conductor,
     } = datos;
+
+    const titulo    = cfg('ticket_titulo_salida', 'COMPROBANTE DE SALIDA');
+    const pieMsg    = cfg('ticket_pie_salida', 'Gracias por su visita');
+    const tarifa    = cfg('tarifa_por_hora', '25.50');
+    const negNombre = cfg('negocio_nombre', 'Estacionamiento');
+    const negRfc    = cfg('negocio_rfc', '');
+    const negDir    = cfg('negocio_direccion', '');
+    const negCiudad = cfg('negocio_ciudad', '');
+    const negTel    = cfg('negocio_telefono', '');
+    const negEmail  = cfg('negocio_email', '');
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({
@@ -164,11 +209,11 @@ export function generarComprobanteSalidaPDF(datos) {
     doc.setTextColor(255, 255, 255);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12);
-    doc.text('ESTACIONAMIENTO', ancho / 2, 11, { align: 'center' });
+    doc.text(negNombre.toUpperCase(), ancho / 2, 11, { align: 'center' });
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(7);
     doc.setTextColor(167, 243, 208);
-    doc.text('COMPROBANTE DE SALIDA', ancho / 2, 19, { align: 'center' });
+    doc.text(titulo, ancho / 2, 19, { align: 'center' });
     y = 34;
 
     // ── Matrícula ─────────────────────────────────────────────
@@ -290,13 +335,13 @@ export function generarComprobanteSalidaPDF(datos) {
     doc.setFontSize(6.5);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(170, 170, 170);
-    doc.text('Gracias por su visita', ancho / 2, y, { align: 'center' });
+    doc.text(pieMsg, ancho / 2, y, { align: 'center' });
     y += 4;
-    doc.text('Tarifa: $25.50 MXN / hora', ancho / 2, y, { align: 'center' });
+    doc.text(`Tarifa: $${tarifa} MXN / hora`, ancho / 2, y, { align: 'center' });
     y += 8;
 
     // ── Datos del negocio ─────────────────────────────────────
-    agregarDatosNegocio(doc, ancho, margen, y);
+    agregarDatosNegocio(doc, ancho, margen, y, negNombre, negRfc, negDir, negCiudad, negTel, negEmail, 5, 150, 105);
 
     doc.save(`comprobante-salida-${matricula}-${Date.now()}.pdf`);
 }
@@ -304,7 +349,7 @@ export function generarComprobanteSalidaPDF(datos) {
 // ══════════════════════════════════════════════════════════════
 //  HELPERS COMPARTIDOS
 // ══════════════════════════════════════════════════════════════
-function agregarDatosNegocio(doc, ancho, margen, y) {
+function agregarDatosNegocio(doc, ancho, margen, y, nombre, rfc, dir, ciudad, tel, email, r, g, b) {
     doc.setDrawColor(210, 210, 210);
     doc.setLineDash([1, 1]);
     doc.line(margen, y, ancho - margen, y);
@@ -317,27 +362,24 @@ function agregarDatosNegocio(doc, ancho, margen, y) {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(8);
     doc.setTextColor(50, 50, 50);
-    doc.text('Estacionamiento El Centro', ancho / 2, y + 2, { align: 'center' });
+    doc.text(nombre || 'Estacionamiento', ancho / 2, y + 2, { align: 'center' });
 
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(6.5);
     doc.setTextColor(120, 120, 120);
-    doc.text('RFC: ECE-850312-AB3', ancho / 2, y + 8, { align: 'center' });
+    if (rfc)    doc.text(`RFC: ${rfc}`, ancho / 2, y + 8, { align: 'center' });
     y += 13;
 
     doc.setFontSize(6);
     doc.setTextColor(150, 150, 150);
-    doc.text('Av. Reforma No. 123, Col. Centro', ancho / 2, y, { align: 'center' });
+    if (dir)    doc.text(dir,    ancho / 2, y,     { align: 'center' }), y += 4;
+    if (ciudad) doc.text(ciudad, ancho / 2, y,     { align: 'center' }), y += 4;
+    if (tel)    doc.text(tel,    ancho / 2, y,     { align: 'center' }), y += 4;
+    if (email)  doc.text(email,  ancho / 2, y,     { align: 'center' }), y += 4;
     y += 4;
-    doc.text('Ciudad de Mexico, CDMX, C.P. 06000', ancho / 2, y, { align: 'center' });
-    y += 4;
-    doc.text('Tel: (55) 1234-5678', ancho / 2, y, { align: 'center' });
-    y += 4;
-    doc.text('contacto@elcentro.com.mx', ancho / 2, y, { align: 'center' });
-    y += 8;
 
     const altoPDF = doc.internal.pageSize.getHeight();
-    doc.setFillColor(45, 55, 72);
+    doc.setFillColor(r ?? 45, g ?? 55, b ?? 72);
     doc.rect(0, altoPDF - 3, ancho, 3, 'F');
 }
 

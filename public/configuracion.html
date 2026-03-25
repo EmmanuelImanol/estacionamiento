@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración — Estacionamiento</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/animaciones.css">
+    <link rel="stylesheet" href="css/usuarios.css">
+    <link rel="stylesheet" href="css/toast.css">
+    <link rel="stylesheet" href="css/configuracion.css">
+</head>
+<body>
+
+    <div class="mobile-topbar" id="mobile-topbar"></div>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <div class="main-content">
+        <div class="main-inner">
+
+            <div class="page-header">
+                <div>
+                    <h1>⚙️ Configuración</h1>
+                    <p class="page-subtitle">Personaliza los datos del negocio y los tickets</p>
+                </div>
+                <button id="btn-guardar-todo" class="btn btn-primary">
+                    💾 Guardar cambios
+                </button>
+            </div>
+
+            <div id="config-msg" class="usuario-msg oculto"></div>
+
+            <!-- Datos del negocio -->
+            <div class="card-seccion">
+                <div class="seccion-header">
+                    <h2>🏢 Datos del Negocio</h2>
+                </div>
+                <div class="form-usuarios">
+                    <div class="form-field">
+                        <label for="negocio_nombre">Nombre del estacionamiento</label>
+                        <input type="text" id="negocio_nombre" placeholder="Ej. Estacionamiento El Centro">
+                    </div>
+                    <div class="form-field">
+                        <label for="negocio_rfc">RFC</label>
+                        <input type="text" id="negocio_rfc" placeholder="Ej. ECE-850312-AB3">
+                    </div>
+                    <div class="form-field">
+                        <label for="negocio_direccion">Dirección</label>
+                        <input type="text" id="negocio_direccion" placeholder="Ej. Av. Reforma No. 123, Col. Centro">
+                    </div>
+                    <div class="form-field">
+                        <label for="negocio_ciudad">Ciudad y C.P.</label>
+                        <input type="text" id="negocio_ciudad" placeholder="Ej. Ciudad de México, CDMX, C.P. 06000">
+                    </div>
+                    <div class="form-field">
+                        <label for="negocio_telefono">Teléfono</label>
+                        <input type="text" id="negocio_telefono" placeholder="Ej. (55) 1234-5678">
+                    </div>
+                    <div class="form-field">
+                        <label for="negocio_email">Correo electrónico</label>
+                        <input type="email" id="negocio_email" placeholder="correo@negocio.com">
+                    </div>
+                </div>
+
+                <div class="form-field" style="margin-top:0.75rem; max-width:240px;">
+                    <label for="tarifa_por_hora">Tarifa por hora (MXN)</label>
+                    <input type="number" id="tarifa_por_hora" min="1" step="0.50"
+                           placeholder="Ej. 25.50"
+                           style="text-transform:none;">
+                </div>
+            </div>
+
+            <!-- Configuración de tickets -->
+            <div class="card-seccion">
+                <div class="seccion-header">
+                    <h2>🎫 Configuración de Tickets</h2>
+                </div>
+
+                <div class="form-usuarios" style="margin-bottom:1rem;">
+                    <div class="form-field">
+                        <label for="ticket_titulo_entrada">Título ticket de entrada</label>
+                        <input type="text" id="ticket_titulo_entrada"
+                               placeholder="Ej. TICKET DE ENTRADA"
+                               style="text-transform:uppercase;">
+                    </div>
+                    <div class="form-field">
+                        <label for="ticket_titulo_salida">Título comprobante de salida</label>
+                        <input type="text" id="ticket_titulo_salida"
+                               placeholder="Ej. COMPROBANTE DE SALIDA"
+                               style="text-transform:uppercase;">
+                    </div>
+                    <div class="form-field">
+                        <label for="ticket_pie_entrada">Mensaje pie — entrada</label>
+                        <input type="text" id="ticket_pie_entrada"
+                               placeholder="Ej. Conserve este ticket hasta la salida">
+                    </div>
+                    <div class="form-field">
+                        <label for="ticket_pie_salida">Mensaje pie — salida</label>
+                        <input type="text" id="ticket_pie_salida"
+                               placeholder="Ej. Gracias por su visita">
+                    </div>
+                </div>
+
+                <!-- Color y opciones -->
+                <div style="display:flex; flex-wrap:wrap; gap:1.5rem; align-items:flex-start;">
+
+                    <div class="form-field" style="flex:0 0 auto;">
+                        <label for="ticket_color">Color principal del ticket</label>
+                        <div style="display:flex; align-items:center; gap:0.75rem; margin-top:0.35rem;">
+                            <input type="color" id="ticket_color"
+                                   style="width:48px; height:38px; padding:2px; border-radius:6px;
+                                          border:1px solid var(--border-color); cursor:pointer;">
+                            <input type="text" id="ticket_color_hex"
+                                   placeholder="#2D3748" maxlength="7"
+                                   style="width:100px; text-transform:uppercase;">
+                        </div>
+                    </div>
+
+                    <div style="display:flex; flex-direction:column; gap:1rem; padding-top:0.25rem;">
+                        <label class="toggle-opcion">
+                            <div class="toggle-opcion-texto">
+                                <span>Mostrar código QR</span>
+                                <small>El QR aparece en el ticket de entrada</small>
+                            </div>
+                            <div class="toggle-track" id="track-qr">
+                                <div class="toggle-thumb"></div>
+                            </div>
+                            <input type="hidden" id="ticket_mostrar_qr" value="1">
+                        </label>
+
+                        <label class="toggle-opcion">
+                            <div class="toggle-opcion-texto">
+                                <span>Mostrar badge de cliente frecuente</span>
+                                <small>Muestra "FRECUENTE" en el ticket</small>
+                            </div>
+                            <div class="toggle-track" id="track-frecuente">
+                                <div class="toggle-thumb"></div>
+                            </div>
+                            <input type="hidden" id="ticket_mostrar_frecuente" value="1">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview del ticket -->
+            <div class="card-seccion">
+                <div class="seccion-header">
+                    <h2>👁 Preview del Ticket</h2>
+                    <button id="btn-preview" class="btn-sm btn-outline">Actualizar preview</button>
+                </div>
+                <div id="preview-container"
+                     style="display:flex; gap:1.5rem; flex-wrap:wrap; justify-content:center;">
+                    <div id="preview-entrada" style="text-align:center;">
+                        <p style="font-size:0.75rem; color:#6b7280; margin-bottom:0.5rem;">Ticket de entrada</p>
+                        <div id="preview-ticket-entrada" class="preview-ticket"></div>
+                    </div>
+                    <div id="preview-salida" style="text-align:center;">
+                        <p style="font-size:0.75rem; color:#6b7280; margin-bottom:0.5rem;">Comprobante de salida</p>
+                        <div id="preview-ticket-salida" class="preview-ticket"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import { inicializarSidebar } from './js/sidebar.js';
+        inicializarSidebar('configuracion');
+    </script>
+    <script type="module" src="js/configuracion.js"></script>
+</body>
+</html>

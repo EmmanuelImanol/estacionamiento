@@ -59,6 +59,11 @@ export function inicializarSidebar(paginaActual) {
                 <span class="sidebar-link-label">Usuarios</span>
                 <span class="sidebar-link-badge">Admin</span>
             </a>
+
+            <a href="configuracion.html" class="sidebar-link ${paginaActual === 'configuracion' ? 'active' : ''}">
+                <span class="sidebar-link-icon">⚙</span>
+                <span class="sidebar-link-label">Configuración</span>
+            </a>
             ` : ''}
 
             <div class="sidebar-divider"></div>

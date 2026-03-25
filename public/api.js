@@ -151,7 +151,28 @@ export class ParkingAPI {
     return data;
   }
 
-  // ── Dashboard ─────────────────────────────────────────────────
+  // ── Configuración ─────────────────────────────────────────────
+  static async obtenerConfig() {
+    const url = new URL(this.#BASE_URL, window.location.origin);
+    url.searchParams.append('action', 'config.obtener');
+    const res  = await fetch(url);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    return data.data;
+  }
+
+  static async guardarConfig(datos) {
+    const url = new URL(this.#BASE_URL, window.location.origin);
+    url.searchParams.append('action', 'config.guardar');
+    const res  = await fetch(url, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(datos)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    return data;
+  }
 
   static async obtenerResumenDia() {
     const url = new URL(this.#BASE_URL, window.location.origin);
