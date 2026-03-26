@@ -43,8 +43,10 @@
                     pattern="^[A-Za-z0-9]{3,10}$" title="Entre 3 y 10 letras y/o números">
                 <!-- Observaciones opcionales -->
                 <div style="margin-top: 0.5rem;">
-                    <input type="text" id="observaciones" placeholder="Observaciones: color, modelo... (opcional)"
-                        maxlength="255" style="text-transform: none;">
+                    <label for="observaciones">Observaciones <span
+                            style="font-weight:400; color:#9ca3af;">(opcional)</span></label>
+                    <input type="text" id="observaciones" placeholder="Ej. Rojo, Sedan, Volkswagen Jetta"
+                        maxlength="255" autocomplete="off" style="text-transform:none;">
                 </div>
 
                 <div class="button-group">
