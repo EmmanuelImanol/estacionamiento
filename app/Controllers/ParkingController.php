@@ -30,6 +30,9 @@ class ParkingController
         $esFrecuente = $cliente['visitas'] > 1;
         $nombre      = $cliente['nombre'] ?? null;
 
+        // Observaciones opcionales desde GET o POST
+        $observaciones = trim($_GET['observaciones'] ?? '');
+
         $historial = [];
         if ($esFrecuente) {
             $historial = $this->repository->obtenerHistorialCliente($matricula);
@@ -37,7 +40,7 @@ class ParkingController
 
         $sesion = new ParkingSession($matricula);
 
-        if ($this->repository->guardarEntrada($sesion)) {
+        if ($this->repository->guardarEntrada($sesion, $observaciones)) {
             JsonResponse::send([
                 'status'  => 'success',
                 'message' => 'Entrada registrada en base de datos',
@@ -50,6 +53,7 @@ class ParkingController
                     'visitas'          => $cliente['visitas'],
                     'ultima_visita'    => $cliente['ultima_visita'],
                     'historial'        => $historial,
+                    'observaciones'    => $observaciones,
                 ]
             ], 201);
         } else {

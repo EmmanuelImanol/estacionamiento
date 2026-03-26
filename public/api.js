@@ -1,13 +1,14 @@
 export class ParkingAPI {
-  static #BASE_URL = '/estacionamiento/api.php';
+  static #BASE_URL = 'api.php';
 
   // ── Operaciones ───────────────────────────────────────────────
 
-  static async procesarAccion(accion, matricula) {
+  static async procesarAccion(accion, matricula, observaciones = '') {
     try {
       const url = new URL(this.#BASE_URL, window.location.origin);
       url.searchParams.append('action', accion);
       url.searchParams.append('matricula', matricula);
+      if (observaciones) url.searchParams.append('observaciones', observaciones);
 
       const response = await fetch(url);
       const data     = await response.json();

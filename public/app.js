@@ -140,8 +140,9 @@ class ParkingApp {
 
       const accion    = e.submitter?.dataset.action || this.#accionActual;
       const matricula = this.#inputMatricula.value.trim().toUpperCase();
+      const obsInput  = document.getElementById('observaciones');
+      const observaciones = obsInput?.value.trim() || '';
 
-      // Botón buscar — no hace submit normal
       if (accion === 'buscar') {
         if (!matricula) {
           this.#mostrarError('Ingresa una matrícula para buscar.');
@@ -160,9 +161,14 @@ class ParkingApp {
 
       this.#mostrarCargando();
       try {
-        const respuesta = await ParkingAPI.procesarAccion(this.#accionActual, matricula);
+        const respuesta = await ParkingAPI.procesarAccion(
+          this.#accionActual,
+          matricula,
+          this.#accionActual === 'entrada' ? observaciones : ''
+        );
         this.#mostrarExito(respuesta);
         this.#inputMatricula.value = '';
+        if (obsInput) obsInput.value = '';
         await this.#cargarLista();
       } catch (error) {
         this.#mostrarError(error.message);
@@ -334,6 +340,11 @@ class ParkingApp {
               ${esAntiguo ? '⚠️ ' : ''}${fechaParte}
             </div>
             <div style="font-size:0.95rem; font-weight:600;">${horaParte}</div>
+            ${v.observaciones
+              ? `<div style="font-size:0.75rem; color:#9ca3af; margin-top:2px;">
+                   ${v.observaciones}
+                 </div>`
+              : ''}
           </td>
           <td>
             <button class="btn-tabla-salida" data-matricula="${v.matricula}">Cobrar</button>

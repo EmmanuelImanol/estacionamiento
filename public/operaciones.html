@@ -41,6 +41,11 @@
                 <label for="matricula">Matrícula del Vehículo</label>
                 <input type="text" id="matricula" placeholder="Ej. ABC123" required autocomplete="off"
                     pattern="^[A-Za-z0-9]{3,10}$" title="Entre 3 y 10 letras y/o números">
+                <!-- Observaciones opcionales -->
+                <div style="margin-top: 0.5rem;">
+                    <input type="text" id="observaciones" placeholder="Observaciones: color, modelo... (opcional)"
+                        maxlength="255" style="text-transform: none;">
+                </div>
 
                 <div class="button-group">
                     <button type="submit" id="btn-entrada" class="btn btn-primary" data-action="entrada">

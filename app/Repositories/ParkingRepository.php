@@ -96,13 +96,14 @@ class ParkingRepository
 
     // ── Sesiones ─────────────────────────────────────────────────
 
-    public function guardarEntrada(ParkingSession $sesion): bool
+    public function guardarEntrada(ParkingSession $sesion, string $observaciones = ''): bool
     {
-        $query = "INSERT INTO parking_sessions (matricula, hora_entrada, estado) 
-                  VALUES (:matricula, NOW(), 'ACTIVA')";
+        $query = "INSERT INTO parking_sessions (matricula, hora_entrada, estado, observaciones) 
+                  VALUES (:matricula, NOW(), 'ACTIVA', :observaciones)";
         $stmt  = $this->db->prepare($query);
         return $stmt->execute([
-            ':matricula' => $sesion->getMatricula(),
+            ':matricula'     => $sesion->getMatricula(),
+            ':observaciones' => $observaciones ?: null,
         ]);
     }
 
@@ -140,7 +141,7 @@ class ParkingRepository
 
     public function obtenerTodasActivas(): array
     {
-        $query = "SELECT matricula, hora_entrada 
+        $query = "SELECT matricula, hora_entrada, observaciones
                   FROM parking_sessions 
                   WHERE estado = 'ACTIVA' 
                   ORDER BY hora_entrada DESC";
