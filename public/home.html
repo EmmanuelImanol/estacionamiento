@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio — Estacionamiento</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="shortcut icon" href="favicon.svg">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/animaciones.css">
@@ -314,6 +312,7 @@
                                 <th>Matrícula</th>
                                 <th>Entrada</th>
                                 <th>Tiempo</th>
+                                <th>Observaciones</th>
                                 <th>Acción</th>
                             </tr>
                         </thead>
@@ -402,6 +401,11 @@
                             </td>
                             <td style="color:${esAntiguo?'#ef4444':'#6b7280'};font-weight:${esAntiguo?'600':'400'};">
                                 ${esAntiguo ? '⚠️ ' : ''}${calcularEstancia(a.hora_entrada)}
+                            </td>
+                            <td>
+                                ${a.observaciones
+                                    ? `<span style="font-size:0.78rem;color:#6b7280;">${a.observaciones}</span>`
+                                    : '<span style="color:#d1d5db;">—</span>'}
                             </td>
                             <td>
                                 <a href="operaciones.html" class="btn-cobrar">Cobrar</a>

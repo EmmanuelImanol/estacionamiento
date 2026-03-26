@@ -173,7 +173,10 @@ async function cargarSesiones(desde = null, hasta = null, estado = '') {
             return `
                 <tr>
                     <td><span class="badge-matricula">${s.matricula}</span></td>
-                    <td style="color:#6b7280;">${s.conductor}</td>
+                    <td style="color:#6b7280;">
+                        ${s.conductor}
+                        ${s.observaciones ? `<div style="font-size:0.72rem;color:#9ca3af;margin-top:2px;">${s.observaciones}</div>` : ''}
+                    </td>
                     <td>
                         <div style="font-size:0.75rem; color:#9ca3af;">${entrada.fechaParte}</div>
                         <div style="font-weight:600;">${entrada.horaParte}</div>

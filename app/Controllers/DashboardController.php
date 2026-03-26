@@ -68,7 +68,7 @@ class DashboardController {
 
         $stmt = $this->db->prepare(
             "SELECT ps.matricula, ps.hora_entrada, ps.hora_salida,
-                    ps.total_pagado, ps.estado,
+                    ps.total_pagado, ps.estado, ps.observaciones,
                     COALESCE(c.nombre, 'Desconocido') AS conductor
              FROM parking_sessions ps
              LEFT JOIN clientes c ON ps.matricula = c.matricula
@@ -103,7 +103,7 @@ class DashboardController {
 
         $stmt = $this->db->prepare(
             "SELECT ps.matricula, ps.hora_entrada, ps.hora_salida,
-                    ps.total_pagado, ps.estado,
+                    ps.total_pagado, ps.estado, ps.observaciones,
                     COALESCE(c.nombre, 'Desconocido') AS conductor,
                     TIMESTAMPDIFF(MINUTE, ps.hora_entrada, ps.hora_salida) AS minutos
              FROM parking_sessions ps
