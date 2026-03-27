@@ -138,7 +138,7 @@
                         <div class="toggle-track activo" id="track-normal-activa"><div class="toggle-thumb"></div></div>
                         <input type="hidden" id="tarifa_normal_activa" value="1">
                     </div>
-                    <div class="tarifa-campos">
+                    <div style="max-width:220px;">
                         <div class="form-field">
                             <label for="tarifa_normal_precio_cfg">Precio por hora (MXN)</label>
                             <input type="number" id="tarifa_normal_precio_cfg" min="1" step="0.50" placeholder="25.50" style="text-transform:none;">
@@ -155,7 +155,7 @@
                         <div class="toggle-track" id="track-fraccion-activa"><div class="toggle-thumb"></div></div>
                         <input type="hidden" id="tarifa_fraccion_activa" value="0">
                     </div>
-                    <div class="tarifa-campos">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.875rem; max-width:460px;">
                         <div class="form-field">
                             <label for="tarifa_fraccion_minutos">Minutos de gracia</label>
                             <input type="number" id="tarifa_fraccion_minutos" min="0" max="60" step="5" placeholder="15" style="text-transform:none;">
@@ -176,7 +176,7 @@
                         <div class="toggle-track" id="track-nocturna-activa"><div class="toggle-thumb"></div></div>
                         <input type="hidden" id="tarifa_nocturna_activa" value="0">
                     </div>
-                    <div class="tarifa-campos">
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.875rem;">
                         <div class="form-field">
                             <label for="tarifa_nocturna_precio">Precio por hora (MXN)</label>
                             <input type="number" id="tarifa_nocturna_precio" min="1" step="0.50" placeholder="15.00" style="text-transform:none;">
@@ -201,7 +201,7 @@
                         <div class="toggle-track" id="track-dia-activa"><div class="toggle-thumb"></div></div>
                         <input type="hidden" id="tarifa_dia_activa" value="0">
                     </div>
-                    <div class="tarifa-campos">
+                    <div style="max-width:220px;">
                         <div class="form-field">
                             <label for="tarifa_dia_maximo">Cobro máximo por día (MXN)</label>
                             <input type="number" id="tarifa_dia_maximo" min="1" step="5" placeholder="120.00" style="text-transform:none;">
