@@ -32,28 +32,25 @@ function renderizarTabla(clientes) {
             <td>
                 <span class="badge-matricula">${c.matricula}</span>
             </td>
-            <td style="font-weight:600;">
+            <td style="font-weight:600; color:var(--text-color);">
                 ${c.nombre !== 'Sin nombre'
                     ? c.nombre
-                    : `<span style="color:#9ca3af; font-style:italic;">Sin nombre</span>`
+                    : `<span style="color:#64748b; font-style:italic; font-weight:400;">Sin nombre</span>`
                 }
             </td>
             <td>
-                <span style="background:#eff6ff; color:#1d4ed8; padding:0.15rem 0.5rem;
-                             border-radius:999px; font-size:0.78rem; font-weight:700;">
-                    ${c.visitas} visitas
-                </span>
+                <span class="badge-visitas">${c.visitas}</span>
             </td>
-            <td style="color:#6b7280;">${c.sesiones_totales}</td>
+            <td style="color:#64748b; text-align:center;">${c.sesiones_totales}</td>
             <td style="font-weight:600; color:#059669;">${moneda(c.total_gastado)}</td>
-            <td style="color:#9ca3af; font-size:0.82rem;">
+            <td style="color:#94a3b8; font-size:0.82rem;">
                 ${formatearSoloFecha(c.ultima_visita || c.ultima_entrada)}
             </td>
             <td style="text-align:center;">
                 <button class="btn-editar btn-ver-historial"
                         data-matricula="${c.matricula}"
                         data-nombre="${c.nombre}">
-                    Ver
+                    <i class="fa-solid fa-clock-rotate-left"></i> Historial
                 </button>
             </td>
         </tr>

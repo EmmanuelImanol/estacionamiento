@@ -24,7 +24,7 @@
                     <p class="page-subtitle">Historial y estadísticas de clientes registrados</p>
                 </div>
                 <div style="display:flex;gap:0.75rem;align-items:center;">
-                    <input type="text" id="buscador-frecuentes"
+                    <input type="text" id="input-busqueda"
                            placeholder="Buscar matrícula o nombre..."
                            style="width:220px; text-transform:none;">
                     <button class="btn btn-sm btn-outline" id="btn-exportar-frecuentes">
@@ -46,14 +46,15 @@
                             <tr>
                                 <th>Matrícula</th>
                                 <th>Nombre</th>
-                                <th>Visitas</th>
-                                <th>Última visita</th>
+                                <th style="text-align:center;">Visitas</th>
+                                <th style="text-align:center;">Sesiones</th>
                                 <th>Total gastado</th>
+                                <th>Última visita</th>
                                 <th class="col-accion">Detalle</th>
                             </tr>
                         </thead>
-                        <tbody id="tbody-frecuentes">
-                            <tr><td colspan="6" class="td-cargando">Cargando...</td></tr>
+                        <tbody id="tbody-clientes">
+                            <tr><td colspan="7" class="td-cargando">Cargando...</td></tr>
                         </tbody>
                     </table>
                 </div>
