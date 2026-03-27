@@ -13,12 +13,14 @@ const fecha = s => s
 
 function mostrarMensaje(id, texto, tipo) {
     const el = document.getElementById(id);
+    if (!el) return;
     el.textContent = texto;
     el.className   = `usuario-msg ${tipo}`;
 }
 
 function ocultarMensaje(id) {
-    document.getElementById(id).className = 'usuario-msg oculto';
+    const el = document.getElementById(id);
+    if (el) el.className = 'usuario-msg oculto';
 }
 
 // ── Modal de edición ──────────────────────────────────────────
