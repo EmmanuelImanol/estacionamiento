@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="shortcut icon" href="favicon.svg">
     <title>Frecuentes — Estacionamiento</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="css/sidebar.css">
@@ -27,7 +29,7 @@
                     <input type="text" id="input-busqueda"
                            placeholder="Buscar matrícula o nombre..."
                            style="width:220px; text-transform:none;">
-                    <button class="btn btn-sm btn-outline" id="btn-exportar-frecuentes">
+                    <button class="btn btn-sm btn-outline" id="btn-exportar">
                         <i class="fa-solid fa-file-csv"></i> Exportar CSV
                     </button>
                 </div>
@@ -36,7 +38,7 @@
             <div class="card-seccion">
                 <div class="seccion-header">
                     <h2><i class="fa-solid fa-list"></i> Clientes registrados</h2>
-                    <button class="btn btn-sm btn-outline" id="btn-actualizar-frecuentes">
+                    <button class="btn btn-sm btn-outline" id="btn-refrescar">
                         <i class="fa-solid fa-rotate"></i> Actualizar
                     </button>
                 </div>
@@ -78,7 +80,9 @@
                 <div id="hist-tabla" style="overflow-x:auto;"></div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-cancelar" id="btn-cerrar-historial2">Cerrar</button>
+                <button class="btn btn-sm btn-cancelar" id="btn-cerrar-historial-footer">
+                    <i class="fa-solid fa-xmark"></i> Cerrar
+                </button>
             </div>
         </div>
     </div>
