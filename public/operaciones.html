@@ -1,78 +1,136 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control de Estacionamiento</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="shortcut icon" href="favicon.svg">
+    <title>Dashboard — Estacionamiento</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="css/sidebar.css">
-    <link rel="stylesheet" href="css/modales.css">
     <link rel="stylesheet" href="css/animaciones.css">
+    <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/toast.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
-
 <body>
-
-    <!-- Topbar móvil (sidebar.js la llena) -->
     <div class="mobile-topbar" id="mobile-topbar"></div>
-
-    <!-- Overlay móvil -->
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
-
-    <!-- Sidebar (sidebar.js lo llena) -->
     <aside class="sidebar" id="sidebar"></aside>
 
-    <!-- Contenido principal — ya con la estructura correcta -->
     <div class="main-content">
         <div class="main-inner">
 
-            <h1>Sistema de Estacionamiento</h1>
-
-            <div class="buscador-sticky" id="buscador-sticky">
-                <input type="text" id="input-busqueda" placeholder="Buscar matrícula...">
+            <div class="page-header">
+                <div>
+                    <h1><i class="fa-solid fa-chart-line"></i> Dashboard</h1>
+                    <p class="page-subtitle">Resumen de operaciones e ingresos</p>
+                </div>
+                <div style="display:flex;gap:0.75rem;align-items:center;">
+                    <span id="nombre-usuario" style="font-size:0.85rem;color:#64748b;"></span>
+                    <span id="badge-rol" class="badge-rol"></span>
+                    <button class="btn btn-sm btn-outline" id="btn-logout">
+                        <i class="fa-solid fa-power-off"></i> Cerrar sesión
+                    </button>
+                </div>
             </div>
 
-            <form id="parking-form" class="form-group">
-                <label for="matricula">Matrícula del Vehículo</label>
-                <input type="text" id="matricula" placeholder="Ej. ABC123" required autocomplete="off"
-                    pattern="^[A-Za-z0-9]{3,10}$" title="Entre 3 y 10 letras y/o números">
-                <!-- Observaciones opcionales -->
-                <div style="margin-top: 0.5rem;">
-                    <label for="observaciones">Observaciones <span
-                            style="font-weight:400; color:#9ca3af;">(opcional)</span></label>
-                    <input type="text" id="observaciones" placeholder="Ej. Rojo, Sedan, Volkswagen Jetta"
-                        maxlength="255" autocomplete="off" style="text-transform:none;">
+            <!-- Stats -->
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card" style="--stat-color:#2563eb;">
+                    <div class="stat-icon"><i class="fa-solid fa-car"></i></div>
+                    <div class="stat-valor skeleton">&nbsp;</div>
+                    <div class="stat-label">Autos hoy</div>
+                </div>
+                <div class="stat-card" style="--stat-color:#22c55e;">
+                    <div class="stat-icon"><i class="fa-solid fa-circle-dot"></i></div>
+                    <div class="stat-valor skeleton">&nbsp;</div>
+                    <div class="stat-label">Adentro ahora</div>
+                </div>
+                <div class="stat-card" style="--stat-color:#f59e0b;">
+                    <div class="stat-icon"><i class="fa-solid fa-flag-checkered"></i></div>
+                    <div class="stat-valor skeleton">&nbsp;</div>
+                    <div class="stat-label">Salidas hoy</div>
+                </div>
+                <div class="stat-card" style="--stat-color:#059669;">
+                    <div class="stat-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+                    <div class="stat-valor skeleton">&nbsp;</div>
+                    <div class="stat-label">Ingresos hoy</div>
+                </div>
+                <div class="stat-card solo-admin" style="--stat-color:#8b5cf6;">
+                    <div class="stat-icon"><i class="fa-solid fa-receipt"></i></div>
+                    <div class="stat-valor skeleton">&nbsp;</div>
+                    <div class="stat-label">Ticket promedio</div>
+                </div>
+            </div>
+
+            <!-- Gráfica (solo admin) -->
+            <div class="card-seccion solo-admin" id="seccion-grafica">
+                <div class="seccion-header">
+                    <h2><i class="fa-solid fa-chart-bar"></i> Ingresos</h2>
+                    <div class="tabs">
+                        <button class="tab activo" id="tab-horas">Por hora</button>
+                        <button class="tab" id="tab-dias">Últimos 7 días</button>
+                    </div>
+                </div>
+                <canvas id="grafica-ingresos" height="100"></canvas>
+            </div>
+
+            <!-- Sesiones con filtros -->
+            <div class="card-seccion">
+                <div class="seccion-header">
+                    <h2><i class="fa-solid fa-clock-rotate-left"></i> Sesiones</h2>
+                    <button class="btn btn-sm btn-outline" id="btn-refrescar">
+                        <i class="fa-solid fa-rotate"></i> Actualizar
+                    </button>
                 </div>
 
-                <div class="button-group">
-                    <button type="submit" id="btn-entrada" class="btn btn-primary" data-action="entrada">
-                        🚗 Registrar Entrada
-                    </button>
-                    <button type="submit" id="btn-buscar" class="btn btn-secondary" data-action="buscar">
-                        🔍 Buscar
-                    </button>
+                <div class="filtros-contenedor">
+                    <div class="filtro-campo">
+                        <label for="filtro-desde">Desde</label>
+                        <input type="date" id="filtro-desde">
+                    </div>
+                    <div class="filtro-campo">
+                        <label for="filtro-hasta">Hasta</label>
+                        <input type="date" id="filtro-hasta">
+                    </div>
+                    <div class="filtro-campo">
+                        <label for="filtro-estado">Estado</label>
+                        <select id="filtro-estado">
+                            <option value="">Todos</option>
+                            <option value="ACTIVA">Activas</option>
+                            <option value="FINALIZADA">Finalizadas</option>
+                        </select>
+                    </div>
+                    <div class="filtro-botones">
+                        <button id="btn-filtrar" class="btn btn-primary">
+                            <i class="fa-solid fa-filter"></i> Filtrar
+                        </button>
+                        <button id="btn-limpiar-filtro" class="btn btn-sm btn-outline">
+                            <i class="fa-solid fa-xmark"></i> Limpiar
+                        </button>
+                        <button id="btn-exportar-csv" class="btn btn-sm btn-outline">
+                            <i class="fa-solid fa-file-csv"></i> CSV
+                        </button>
+                    </div>
                 </div>
-            </form>
 
-            <div id="resultado" class="resultado oculto"></div>
+                <div id="resumen-filtro" style="display:flex;justify-content:space-between;align-items:center;font-size:0.82rem;color:#64748b;margin-bottom:0.75rem;padding:0 0.25rem;"></div>
 
-            <div class="lista-seccion">
-                <h2>Vehículos Estacionados</h2>
-                <div style="overflow-x: auto;">
-                    <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.9rem;">
+                <div style="overflow-x:auto;">
+                    <table class="tabla-dashboard">
                         <thead>
                             <tr>
                                 <th>Matrícula</th>
-                                <th>Hora de Entrada</th>
-                                <th class="col-acciones">Acción</th>
+                                <th>Conductor</th>
+                                <th>Entrada</th>
+                                <th>Salida</th>
+                                <th>Tiempo</th>
+                                <th>Total</th>
+                                <th>Estado</th>
                             </tr>
                         </thead>
-                        <tbody id="tbody-vehiculos"></tbody>
+                        <tbody id="tbody-sesiones">
+                            <tr><td colspan="7" class="td-cargando">Cargando...</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -80,67 +138,10 @@
         </div>
     </div>
 
-    <!-- Modal de salida -->
-    <div id="modal-salida" class="modal-overlay oculto">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Confirmar Salida</h3>
-            </div>
-            <div class="modal-body">
-                <div class="modal-info">
-                    <span id="modal-matricula-texto"></span>
-                </div>
-                <div class="modal-detalles" style="font-size:0.9rem; color:#4b5563; line-height:1.6;">
-                    <p>🕒 Entrada: <span id="modal-entrada-texto"></span></p>
-                    <p>⏳ Tiempo: <span id="modal-tiempo-texto"></span></p>
-                </div>
-                <p style="margin-top:1rem; font-weight:500;">¿Confirmar el cobro ahora?</p>
-            </div>
-            <div class="modal-footer">
-                <button id="btn-modal-cancelar" class="btn btn-cancelar">Cancelar</button>
-                <button id="btn-modal-confirmar" class="btn btn-secondary">Confirmar Salida</button>
-            </div>
-        </div>
-    </div>
-
     <script type="module">
         import { inicializarSidebar } from './js/sidebar.js';
-        inicializarSidebar('operaciones');
+        inicializarSidebar('dashboard');
     </script>
-    <script type="module" src="app.js"></script>
-
-    <div id="modal-cliente" class="modal-overlay oculto">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>📝 Registrar Cliente</h3>
-                <button class="modal-cerrar" id="btn-cerrar-modal-cliente">✕</button>
-            </div>
-            <div class="modal-body">
-                <p style="font-size:0.85rem; color:#6b7280; margin-bottom:1rem;">
-                    Ingresa el nombre del conductor para la matrícula
-                    <strong id="modal-cliente-matricula" style="color:#2563eb;"></strong>
-                </p>
-                <div style="display:flex; flex-direction:column; gap:0.35rem;">
-                    <label for="modal-cliente-nombre" style="font-size:0.8rem; font-weight:600; color:#374151;">
-                        Nombre completo
-                    </label>
-                    <input type="text" id="modal-cliente-nombre" placeholder="Ej. Juan Pérez" style="padding:0.7rem; border:1px solid #e5e7eb; border-radius:6px;
-                           font-size:0.9rem; text-transform:none; width:100%;">
-                </div>
-                <div id="modal-cliente-msg" style="display:none; margin-top:0.75rem; font-size:0.8rem; 
-                        padding:0.5rem 0.75rem; border-radius:6px;">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-cancelar" id="btn-cancelar-modal-cliente">
-                    Cancelar
-                </button>
-                <button class="btn btn-primary" id="btn-guardar-modal-cliente">
-                    Guardar
-                </button>
-            </div>
-        </div>
-    </div>
+    <script type="module" src="js/dashboard.js"></script>
 </body>
-
 </html>

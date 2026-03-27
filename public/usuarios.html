@@ -4,69 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuarios — Estacionamiento</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="shortcut icon" href="favicon.svg">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/animaciones.css">
     <link rel="stylesheet" href="css/usuarios.css">
+    <link rel="stylesheet" href="css/toast.css">
 </head>
 <body>
-
-    <!-- Placeholders del sidebar -->
     <div class="mobile-topbar" id="mobile-topbar"></div>
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
     <aside class="sidebar" id="sidebar"></aside>
 
-    <!-- Contenido principal -->
     <div class="main-content">
         <div class="main-inner">
 
             <div class="page-header">
                 <div>
-                    <h1>👥 Gestión de Usuarios</h1>
+                    <h1><i class="fa-solid fa-users"></i> Gestión de Usuarios</h1>
                     <p class="page-subtitle">Crea y administra los accesos al sistema</p>
                 </div>
             </div>
 
+            <div id="usuarios-msg" class="usuario-msg oculto"></div>
+
             <!-- Formulario nuevo usuario -->
             <div class="card-seccion">
                 <div class="seccion-header">
-                    <h2>➕ Nuevo Usuario</h2>
+                    <h2><i class="fa-solid fa-user-plus"></i> Nuevo Usuario</h2>
                 </div>
                 <div class="form-usuarios">
                     <div class="form-field">
-                        <label for="u-nombre">Nombre completo</label>
-                        <input type="text" id="u-nombre" placeholder="Ej. Juan Pérez">
+                        <label for="nuevo-nombre">Nombre completo</label>
+                        <input type="text" id="nuevo-nombre" placeholder="Ej. Juan Pérez" autocomplete="off">
                     </div>
                     <div class="form-field">
-                        <label for="u-email">Correo electrónico</label>
-                        <input type="email" id="u-email" placeholder="correo@ejemplo.com">
+                        <label for="nuevo-email">Correo electrónico</label>
+                        <input type="email" id="nuevo-email" placeholder="correo@ejemplo.com" autocomplete="off">
                     </div>
                     <div class="form-field">
-                        <label for="u-password">Contraseña</label>
-                        <input type="password" id="u-password" placeholder="Mínimo 8 caracteres">
+                        <label for="nuevo-password">Contraseña</label>
+                        <input type="password" id="nuevo-password" placeholder="Mínimo 8 caracteres">
                     </div>
                     <div class="form-field">
-                        <label for="u-rol">Rol</label>
-                        <select id="u-rol">
+                        <label for="nuevo-rol">Rol</label>
+                        <select id="nuevo-rol">
                             <option value="cajero">Cajero</option>
                             <option value="admin">Administrador</option>
                         </select>
                     </div>
                 </div>
-                <div id="usuario-msg" class="usuario-msg oculto"></div>
-                <button id="btn-crear-usuario" class="btn btn-primary" style="width:100%;">
-                    Crear Usuario
+                <button id="btn-crear-usuario" class="btn btn-primary" style="width:100%; justify-content:center;">
+                    <i class="fa-solid fa-user-plus"></i> Crear Usuario
                 </button>
             </div>
 
             <!-- Tabla de usuarios -->
             <div class="card-seccion">
                 <div class="seccion-header">
-                    <h2>📋 Usuarios Registrados</h2>
-                    <button class="btn-sm btn-outline" id="btn-refrescar-usuarios">↻ Actualizar</button>
+                    <h2><i class="fa-solid fa-list"></i> Usuarios Registrados</h2>
+                    <button class="btn btn-sm btn-outline" id="btn-actualizar-usuarios">
+                        <i class="fa-solid fa-rotate"></i> Actualizar
+                    </button>
                 </div>
-                <div style="overflow-x: auto;">
+                <div style="overflow-x:auto;">
                     <table class="tabla-usuarios">
                         <thead>
                             <tr>
@@ -79,9 +79,7 @@
                             </tr>
                         </thead>
                         <tbody id="tbody-usuarios">
-                            <tr>
-                                <td colspan="6" class="td-cargando">Cargando usuarios...</td>
-                            </tr>
+                            <tr><td colspan="6" class="td-cargando">Cargando...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -91,41 +89,40 @@
     </div>
 
     <!-- Modal editar usuario -->
-    <div class="modal-overlay oculto" id="modal-editar">
+    <div id="modal-editar" class="modal-overlay oculto">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>✏️ Editar Usuario</h3>
+                <h3><i class="fa-solid fa-pen"></i> Editar Usuario</h3>
                 <button class="modal-cerrar" id="btn-cerrar-modal">✕</button>
             </div>
             <div class="modal-body">
-                <input type="hidden" id="edit-id">
-                <div class="form-field" style="margin-bottom: 0.85rem;">
-                    <label for="edit-nombre">Nombre completo</label>
-                    <input type="text" id="edit-nombre" placeholder="Nombre completo">
+                <input type="hidden" id="editar-id">
+                <div class="form-field">
+                    <label for="editar-nombre">Nombre completo</label>
+                    <input type="text" id="editar-nombre">
                 </div>
-                <div class="form-field" style="margin-bottom: 0.85rem;">
-                    <label for="edit-email">Correo electrónico</label>
-                    <input type="email" id="edit-email" placeholder="correo@ejemplo.com">
+                <div class="form-field">
+                    <label for="editar-email">Correo electrónico</label>
+                    <input type="email" id="editar-email">
                 </div>
-                <div class="form-field" style="margin-bottom: 0.85rem;">
-                    <label for="edit-rol">Rol</label>
-                    <select id="edit-rol">
+                <div class="form-field">
+                    <label for="editar-password">Nueva contraseña <span style="font-weight:400;color:#94a3b8;">(dejar vacío para no cambiar)</span></label>
+                    <input type="password" id="editar-password" placeholder="Nueva contraseña">
+                </div>
+                <div class="form-field">
+                    <label for="editar-rol">Rol</label>
+                    <select id="editar-rol">
                         <option value="cajero">Cajero</option>
                         <option value="admin">Administrador</option>
                     </select>
                 </div>
-                <div class="form-field">
-                    <label for="edit-password">
-                        Nueva contraseña
-                        <span style="color:#9ca3af; font-weight:400;">(dejar vacío para no cambiar)</span>
-                    </label>
-                    <input type="password" id="edit-password" placeholder="Mínimo 8 caracteres">
-                </div>
+                <div id="modal-editar-msg" class="usuario-msg oculto"></div>
             </div>
-            <div id="edit-msg" class="usuario-msg oculto"></div>
             <div class="modal-footer">
-                <button class="btn btn-outline btn-sm" id="btn-cancelar-edicion">Cancelar</button>
-                <button class="btn btn-primary"        id="btn-guardar-edicion">Guardar cambios</button>
+                <button class="btn btn-sm btn-cancelar" id="btn-cancelar-editar">Cancelar</button>
+                <button class="btn btn-primary" id="btn-guardar-editar">
+                    <i class="fa-solid fa-floppy-disk"></i> Guardar cambios
+                </button>
             </div>
         </div>
     </div>
