@@ -74,7 +74,9 @@ colorHex.addEventListener('input', () => {
 
 // Actualizar preview al cambiar cualquier campo de texto
 document.querySelectorAll('input[type="text"], input[type="email"], input[type="number"]')
-    .forEach(el => el.addEventListener('input', actualizarPreview));
+    .forEach(el => el.addEventListener('input', () => {
+        if (document.getElementById('preview-ticket-entrada')) actualizarPreview();
+    }));
 
 // ── Cargar configuración ──────────────────────────────────────
 async function cargarConfig() {
@@ -269,5 +271,5 @@ document.getElementById('btn-guardar-todo').addEventListener('click', async () =
 
 document.getElementById('btn-preview')?.addEventListener('click', actualizarPreview);
 
-// ── Inicializar ───────────────────────────────────────────────
+// ── Inicializar ───────────────────────────────────────────
 cargarConfig();
