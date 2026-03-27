@@ -1,0 +1,79 @@
+/* css/home.css — Estilos de la página de inicio */
+
+/* ── Bienvenida ─────────────────────────────────────────────── */
+.bienvenida {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.75rem;
+    flex-wrap: wrap; gap: 0.75rem;
+}
+.bienvenida-texto h1 {
+    font-size: 1.4rem; font-weight: 700;
+    color: var(--text-color); letter-spacing: -0.02em;
+}
+.bienvenida-texto p { font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem; }
+
+.reloj-badge {
+    background: var(--card-bg);
+    border: 0.5px solid var(--border-color);
+    border-radius: 8px; padding: 0.5rem 0.875rem;
+    font-size: 0.8rem; color: var(--text-secondary); font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    transition: background 0.3s, border-color 0.3s;
+}
+
+/* ── Accesos rápidos ────────────────────────────────────────── */
+.accesos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+    gap: 0.875rem; margin-bottom: 1.5rem;
+}
+.acceso-card {
+    background: var(--card-bg);
+    border: 0.5px solid var(--border-color);
+    border-radius: 12px; padding: 1.125rem;
+    display: flex; align-items: center; gap: 0.875rem;
+    text-decoration: none; cursor: pointer;
+    transition: all 0.2s ease;
+}
+.acceso-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(37,99,235,0.08);
+}
+.acceso-icono {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+}
+.acceso-texto h3 { font-size: 0.875rem; font-weight: 600; color: var(--text-color); }
+.acceso-texto p  { font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.1rem; }
+
+/* ── Tabla de activos ───────────────────────────────────────── */
+.tabla-home-wrap { overflow-x: auto; }
+
+.tabla-activos { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.tabla-activos th {
+    background: #f8fafc; padding: 0.65rem 0.875rem;
+    text-align: left; font-size: 0.72rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+.tabla-activos td {
+    padding: 0.75rem 0.875rem;
+    border-bottom: 0.5px solid var(--border-color);
+    color: var(--text-color);
+}
+.tabla-activos tr:last-child td { border-bottom: none; }
+.tabla-activos tr:hover td { background: #f8fafc; }
+
+/* ── Dark mode home ─────────────────────────────────────────── */
+.dark-mode .acceso-card    { background: #1a2235; border-color: rgba(255,255,255,0.07); }
+.dark-mode .acceso-card:hover { border-color: #3b82f6; box-shadow: 0 4px 16px rgba(37,99,235,0.12); }
+.dark-mode .acceso-texto h3 { color: #e2e8f0; }
+.dark-mode .acceso-texto p  { color: #475569; }
+.dark-mode .tabla-activos th { background: #182030; color: #475569; border-color: rgba(255,255,255,0.06); }
+.dark-mode .tabla-activos td { border-color: rgba(255,255,255,0.04); color: #94a3b8; }
+.dark-mode .tabla-activos tr:hover td { background: #1e2d45; }

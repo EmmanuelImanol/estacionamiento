@@ -1,370 +1,111 @@
-/* css/animaciones.css — Animaciones globales y modo oscuro */
+/* css/animaciones.css — Animaciones y modo oscuro */
 
-/* ── Variables modo oscuro ──────────────────────────────────── */
-:root {
-    --bg-color:        #f3f4f6;
-    --card-bg:         #ffffff;
-    --text-color:      #1f2937;
-    --text-secondary:  #6b7280;
-    --border-color:    #e5e7eb;
-    --input-bg:        #ffffff;
-    --primary-color:   #2563eb;
-    --primary-hover:   #1d4ed8;
-    --secondary-color: #10b981;
-    --secondary-hover: #059669;
-    --error-color:     #ef4444;
-    --sidebar-bg:      #0f172a;
-    --transition:      0.2s ease;
-}
-
-.dark-mode {
-    --bg-color:        #0f172a;
-    --card-bg:         #1e293b;
-    --text-color:      #f1f5f9;
-    --text-secondary:  #94a3b8;
-    --border-color:    rgba(255,255,255,0.08);
-    --input-bg:        #273548;
-    --primary-color:   #3b82f6;
-    --primary-hover:   #2563eb;
-    --secondary-color: #10b981;
-    --sidebar-bg:      #020617;
-}
-
-/* ── Transición global al cambiar tema ──────────────────────── */
-body,
-.card, .seccion, .card-seccion,
-input, select, table, th, td,
-.sidebar, .main-content,
-.modal-content, .stat-card {
-    transition:
-        background-color 0.3s ease,
-        border-color 0.3s ease,
-        color 0.3s ease;
-}
-
-/* ── Animaciones de entrada para cards ──────────────────────── */
+/* ── Animaciones de entrada ─────────────────────────────────── */
 @keyframes fadeSlideUp {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(10px); }
     to   { opacity: 1; transform: translateY(0); }
 }
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-
 @keyframes scaleIn {
-    from { opacity: 0; transform: scale(0.96); }
+    from { opacity: 0; transform: scale(0.95); }
     to   { opacity: 1; transform: scale(1); }
 }
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.5; }
+@keyframes shimmer {
+    0%   { background-position:  200% 0; }
+    100% { background-position: -200% 0; }
 }
 
-/* Aplicar a elementos clave */
-.card,
-.stat-card,
-.seccion,
-.card-seccion {
-    animation: fadeSlideUp 0.35s ease both;
+/* Cards con animación de entrada */
+.card-seccion, .seccion, .stat-card {
+    animation: fadeSlideUp 0.3s ease both;
+}
+.stat-card:nth-child(1) { animation-delay: 0.04s; }
+.stat-card:nth-child(2) { animation-delay: 0.08s; }
+.stat-card:nth-child(3) { animation-delay: 0.12s; }
+.stat-card:nth-child(4) { animation-delay: 0.16s; }
+.stat-card:nth-child(5) { animation-delay: 0.20s; }
+
+/* Botones con feedback */
+.btn, .btn-primary, .btn-secondary, .btn-sm { transition: all 0.15s ease; }
+.btn:active, .btn-primary:active, .btn-secondary:active { transform: scale(0.97); }
+
+/* Skeleton loader */
+.skeleton {
+    background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.2s infinite;
+    border-radius: 6px; height: 1.5rem;
+}
+.dark-mode .skeleton {
+    background: linear-gradient(90deg, #1e293b 25%, #273548 50%, #1e293b 75%);
+    background-size: 200% 100%;
 }
 
-/* Escalonar las stat-cards */
-.stat-card:nth-child(1) { animation-delay: 0.05s; }
-.stat-card:nth-child(2) { animation-delay: 0.10s; }
-.stat-card:nth-child(3) { animation-delay: 0.15s; }
-.stat-card:nth-child(4) { animation-delay: 0.20s; }
-.stat-card:nth-child(5) { animation-delay: 0.25s; }
-
-/* ── Hover en filas de tabla ────────────────────────────────── */
-tbody tr {
-    transition: background-color 0.15s ease;
+/* ── Transición global de tema ──────────────────────────────── */
+body, .card-seccion, .seccion, input, select, table, th, td,
+.sidebar, .main-content, .stat-card, .modal-content {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
-/* ── Botones con feedback táctil ────────────────────────────── */
-.btn,
-.btn-primary,
-.btn-secondary,
-.btn-sm {
-    transition:
-        background-color 0.15s ease,
-        transform 0.1s ease,
-        box-shadow 0.15s ease;
-}
+/* ── Modo oscuro global ─────────────────────────────────────── */
+.dark-mode body               { background-color: #0f172a; color: #e2e8f0; }
+.dark-mode .card-seccion,
+.dark-mode .seccion           { background-color: #1a2235; border-color: rgba(255,255,255,0.07); }
+.dark-mode .seccion-header h2 { color: #e2e8f0; }
+.dark-mode table              { background: #1a2235; }
+.dark-mode .stat-card         { background: #1a2235; border-color: rgba(255,255,255,0.07); }
+.dark-mode .stat-label        { color: #475569; }
+.dark-mode .stat-valor        { color: var(--stat-color, #3b82f6); }
+.dark-mode h1, .dark-mode h2,
+.dark-mode h3                 { color: #e2e8f0; }
+.dark-mode label              { color: #64748b; }
+.dark-mode tr:hover td        { background: #1e2d45; }
+.dark-mode .resultado         { background: #1a2235; border-color: rgba(255,255,255,0.07); }
 
-.btn:active,
-.btn-primary:active,
-.btn-secondary:active {
-    transform: scale(0.97);
-}
+/* ── Modales en modo oscuro ─────────────────────────────────── */
+.dark-mode .modal-overlay     { background: rgba(0,0,0,0.75); }
+.dark-mode .modal-content     { background: #1a2235; border: 0.5px solid rgba(255,255,255,0.08); }
+.dark-mode .modal-header      { border-color: rgba(255,255,255,0.06); }
+.dark-mode .modal-header h3   { color: #e2e8f0; }
+.dark-mode .modal-body        { color: #94a3b8; }
+.dark-mode .modal-footer      { background: #182030; border-color: rgba(255,255,255,0.06); }
+.dark-mode .modal-cerrar      { background: #1e2d45; border-color: rgba(255,255,255,0.08); color: #64748b; }
+.dark-mode .modal-cerrar:hover { background: rgba(220,38,38,0.15); border-color: rgba(220,38,38,0.3); color: #f87171; }
+.dark-mode .modal-info        { background: #162032; border-color: rgba(59,130,246,0.2); }
+.dark-mode .modal-info span   { color: #60a5fa; }
+.dark-mode .modal-detalles    { background: #162032; border-color: rgba(255,255,255,0.06); color: #94a3b8; }
+.dark-mode .btn-cancelar      { background: #1e2d45; border-color: rgba(255,255,255,0.08) !important; color: #94a3b8; }
+.dark-mode .btn-cancelar:hover { background: #273548; color: #cbd5e1; }
 
-/* ── Inputs con focus suave ─────────────────────────────────── */
-input, select, textarea {
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        background-color 0.3s ease;
-}
-
-/* ── Links del sidebar con transición ───────────────────────── */
-.sidebar-link {
-    transition:
-        color 0.15s ease,
-        background 0.15s ease,
-        border-left-color 0.15s ease;
-}
-
-/* ── Badge de contador (nuevo) ──────────────────────────────── */
-.sidebar-badge-counter {
-    background: #22c55e;
-    color: white;
-    font-size: 0.65rem;
-    font-weight: 700;
-    padding: 0.1rem 0.45rem;
-    border-radius: 999px;
-    margin-left: auto;
-    min-width: 18px;
-    text-align: center;
-    animation: scaleIn 0.3s ease;
-    transition: all 0.3s ease;
-}
-
-.sidebar-badge-counter.zero {
-    background: #374151;
-}
-
-/* ── Toggle modo oscuro — visible dentro del sidebar oscuro ──── */
-.dark-toggle {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1.25rem;
-    cursor: pointer;
-    user-select: none;
-    width: 100%;
-    background: none;
-    border: none;
-    text-align: left;
-}
-
-.dark-toggle-label {
-    font-size: 0.78rem;
-    color: #94a3b8;
-    flex: 1;
-}
-
-.dark-toggle-track {
-    width: 32px;
-    height: 18px;
-    background: #374151;
-    border-radius: 999px;
-    position: relative;
-    transition: background 0.2s ease;
-    flex-shrink: 0;
-}
-
-.dark-toggle-track.activo {
-    background: #2563eb;
-}
-
-.dark-toggle-thumb {
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 14px;
-    height: 14px;
-    background: white;
-    border-radius: 50%;
-    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.dark-toggle-track.activo .dark-toggle-thumb {
-    transform: translateX(14px);
-}
-
-/* ── Modo oscuro: colores específicos ───────────────────────── */
-.dark-mode body               { background-color: var(--bg-color); color: var(--text-color); }
-.dark-mode .card,
-.dark-mode .seccion,
-.dark-mode .card-seccion      { background-color: var(--card-bg); border-color: var(--border-color); }
-.dark-mode table              { background: var(--card-bg); }
-.dark-mode th                 { background: #273548; color: #94a3b8; border-color: var(--border-color); }
-.dark-mode td                 { border-color: var(--border-color); color: var(--text-color); }
-.dark-mode input:not([type="date"]):not([type="checkbox"]):not(#filtro-estado),
-.dark-mode select:not(#filtro-estado) { background: var(--input-bg); color: var(--text-color); border-color: var(--border-color); }
-.dark-mode .resultado         { background: #1e293b; border-color: var(--border-color); }
-.dark-mode .modal-overlay        { background: rgba(0, 0, 0, 0.75); }
-.dark-mode .modal-content        { background: #1e293b; border: 0.5px solid rgba(255,255,255,0.08); }
-.dark-mode .modal-header         { border-color: rgba(255,255,255,0.06); }
-.dark-mode .modal-header h3      { color: #f1f5f9; }
-.dark-mode .modal-body           { color: #cbd5e1; }
-.dark-mode .modal-footer         { background: #162032; border-color: rgba(255,255,255,0.06); }
-.dark-mode .modal-cerrar         { background: #273548; border-color: rgba(255,255,255,0.08); color: #64748b; }
-.dark-mode .modal-cerrar:hover   { background: rgba(220,38,38,0.15); border-color: rgba(220,38,38,0.3); color: #f87171; }
-
-/* Info box de matrícula */
-.dark-mode .modal-info           { background: #162032; border-color: rgba(59,130,246,0.2); }
-.dark-mode .modal-info span      { color: #60a5fa; }
-
-/* Detalles de sesión */
-.dark-mode .modal-detalles       { background: #162032; border-color: rgba(255,255,255,0.06); color: #94a3b8; }
-
-/* Info del cliente en modal */
-.dark-mode .modal-cliente-info   { background: #162032; border-color: rgba(255,255,255,0.06); color: #94a3b8; }
-.dark-mode .modal-cliente-matricula-badge { background: #162032; color: #60a5fa; border-color: rgba(59,130,246,0.2); }
-
-/* Inputs dentro del modal */
-.dark-mode .modal-body .form-field label   { color: #64748b; }
-.dark-mode .modal-body .form-field input,
-.dark-mode .modal-body .form-field select  { background: #273548; border-color: rgba(255,255,255,0.08); color: #f1f5f9; }
-.dark-mode .modal-body .form-field input:focus,
-.dark-mode .modal-body .form-field select:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
-.dark-mode .modal-body .form-field input::placeholder { color: #475569; }
-
-/* Botón cancelar en modo oscuro */
-.dark-mode .btn-cancelar { background: #273548; border-color: rgba(255,255,255,0.08) !important; color: #94a3b8; }
-.dark-mode .btn-cancelar:hover { background: #334155; color: #cbd5e1; }
-.dark-mode .badge-matricula   { background: #1e3a5f; color: #60a5fa; }
-.dark-mode h1, .dark-mode h2  { color: var(--text-color); }
-.dark-mode label              { color: #cbd5e1; }
-.dark-mode .stat-card         { background: var(--card-bg); border-color: var(--border-color); }
-.dark-mode .stat-valor        { color: #60a5fa; }
-.dark-mode .stat-label        { color: #64748b; }
-.dark-mode .seccion-header h2 { color: var(--text-color); }
-.dark-mode .tab               { background: #273548; border-color: var(--border-color); color: #94a3b8; }
-.dark-mode .tab.activo        { background: var(--primary-color); color: white; }
-.dark-mode .btn-outline       { background: #273548; border-color: var(--border-color); color: var(--text-color); }
-.dark-mode .lista-seccion     { border-color: var(--border-color); }
-.dark-mode .buscador-sticky   { background: var(--bg-color); }
-.dark-mode tr:hover           { background: #273548; }
-
-/* ── Respetar preferencias de movimiento reducido ───────────── */
-@media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
-    }
-}
-
-/* ── Dashboard: área de filtros ─────────────────────────────── */
+/* ── Dashboard filtros oscuro ───────────────────────────────── */
 .filtros-contenedor {
-    display: flex;
+    display: flex !important;
+    flex-direction: row !important;
     flex-wrap: wrap;
     align-items: flex-end;
-    gap: 0.6rem;
+    gap: 0.75rem;
     margin-bottom: 1rem;
-    padding: 0.85rem;
+    padding: 0.875rem;
     background: #f8fafc;
     border-radius: 8px;
     border: 1px solid var(--border-color);
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+    transition: background-color 0.3s, border-color 0.3s;
 }
+.filtro-campo { display: flex; flex-direction: column; gap: 0.3rem; flex: 1; min-width: 110px; }
+.filtro-campo label { font-size: 0.7rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; }
+.filtro-campo input[type="date"],
+.filtro-campo select { padding: 0.5rem 0.65rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.85rem; background: white; color: var(--text-color); width: 100%; }
+.filtro-botones { display: flex; align-items: flex-end; gap: 0.4rem; flex-shrink: 0; }
 
-.filtros-contenedor .filtro-campo {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    flex: 1;
-    min-width: 120px;
-}
+.dark-mode .filtros-contenedor { background: #182030 !important; border-color: rgba(255,255,255,0.06) !important; }
+.dark-mode .filtro-campo label { color: #475569 !important; }
+.dark-mode .filtro-campo input[type="date"],
+.dark-mode .filtro-campo select { background: #1e2d45 !important; border-color: rgba(255,255,255,0.1) !important; color: #e2e8f0 !important; color-scheme: dark; }
+.dark-mode #resumen-filtro { color: #64748b; }
 
-.filtros-contenedor .filtro-campo label {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: #6b7280;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-}
+/* ── Tabs ───────────────────────────────────────────────────── */
+.dark-mode .tab        { background: #1e2d45; border-color: rgba(255,255,255,0.08); color: #64748b; }
+.dark-mode .tab.activo { background: var(--primary-color); color: white; }
 
-.filtros-contenedor .filtro-campo input,
-.filtros-contenedor .filtro-campo select {
-    padding: 0.45rem 0.6rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    background: white;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.filtros-contenedor .filtro-campo input:focus,
-.filtros-contenedor .filtro-campo select:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
-}
-
-.filtros-contenedor .filtro-botones {
-    display: flex;
-    align-items: flex-end;
-    gap: 0.4rem;
-    flex-shrink: 0;
-}
-
-.dark-mode .filtros-contenedor {
-    background: #162032;
-    border-color: rgba(255,255,255,0.06);
-}
-
-.dark-mode .filtros-contenedor .filtro-campo label { color: #475569; }
-
-.dark-mode .filtros-contenedor .filtro-campo input,
-.dark-mode .filtros-contenedor .filtro-campo select {
-    background: #1e293b;
-    border-color: rgba(255,255,255,0.1);
-    color: #cbd5e1;
-    color-scheme: dark;
-}
-
-/* ── Dashboard: filtros y tabla en modo oscuro ──────────────── */
-.dark-mode .tabla-dashboard th        { background: #1e293b; color: #64748b; border-color: rgba(255,255,255,0.06); }
-.dark-mode .tabla-dashboard td        { border-color: rgba(255,255,255,0.04); color: #cbd5e1; }
-.dark-mode .tabla-dashboard tr:hover td { background: #273548; }
-
-/* Área de filtros */
-.dark-mode [style*="background:#f8fafc"],
-.dark-mode [style*="background: #f8fafc"] {
-    background: #162032 !important;
-    border-color: rgba(255,255,255,0.06) !important;
-}
-
-/* Labels de filtros */
-.dark-mode [style*="font-size:0.7rem"][style*="color:#6b7280"],
-.dark-mode [style*="font-size: 0.7rem"][style*="color: #6b7280"] {
-    color: #475569 !important;
-}
-
-/* Inputs de fecha y select de estado */
-.dark-mode input[type="date"],
-.dark-mode #filtro-estado {
-    background: #1e293b !important;
-    border-color: rgba(255,255,255,0.1) !important;
-    color: #cbd5e1 !important;
-    color-scheme: dark;
-}
-
-.dark-mode input[type="date"]:focus,
-.dark-mode #filtro-estado:focus {
-    border-color: #3b82f6 !important;
-    box-shadow: 0 0 0 3px rgba(59,130,246,0.15) !important;
-}
-
-/* Resumen del filtro (10 sesiones / $178.50) */
-.dark-mode #resumen-filtro       { color: #64748b; }
-.dark-mode #resumen-filtro span:last-child { color: #60a5fa !important; }
-
-/* Badges de estado en tabla */
-.dark-mode .estado-ACTIVA         { background: #064e3b; color: #6ee7b7; }
-.dark-mode .estado-FINALIZADA     { background: #1e1b4b; color: #a5b4fc; }
-
-/* Botones del filtro */
-.dark-mode #btn-filtrar           { background: #2563eb; border-color: #2563eb; }
-.dark-mode #btn-limpiar-filtro,
-.dark-mode #btn-exportar-csv      { background: #1e293b; border-color: rgba(255,255,255,0.1) !important; color: #94a3b8; }
-.dark-mode #btn-limpiar-filtro:hover,
-.dark-mode #btn-exportar-csv:hover { background: #273548; color: #cbd5e1; }
-
-/* Botón actualizar */
-.dark-mode #btn-refrescar         { background: #1e293b; border-color: rgba(255,255,255,0.1) !important; color: #94a3b8; }
-.dark-mode #btn-refrescar:hover   { background: #273548; }
+/* ── Badges oscuro (estado dashboard) ──────────────────────── */
+.dark-mode .estado-ACTIVA     { background: #052e16; color: #4ade80; }
+.dark-mode .estado-FINALIZADA { background: #1e1b4b; color: #a5b4fc; }
