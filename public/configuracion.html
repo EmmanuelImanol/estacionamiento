@@ -36,7 +36,7 @@
                 <div class="seccion-header">
                     <h2><i class="fa-solid fa-building"></i> Datos del Negocio</h2>
                 </div>
-                <div class="form-usuarios">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.875rem; margin-bottom:0.875rem;">
                     <div class="form-field">
                         <label for="negocio_nombre">Nombre del estacionamiento</label>
                         <input type="text" id="negocio_nombre" placeholder="Ej. Estacionamiento El Centro">
@@ -62,7 +62,7 @@
                         <input type="email" id="negocio_email" placeholder="correo@negocio.com">
                     </div>
                 </div>
-                <div class="form-field" style="max-width:240px;">
+                <div class="form-field" style="max-width:220px;">
                     <label for="tarifa_normal_precio">Tarifa por hora (MXN)</label>
                     <input type="number" id="tarifa_normal_precio" min="1" step="0.50" placeholder="25.50" style="text-transform:none;">
                 </div>
@@ -73,7 +73,7 @@
                 <div class="seccion-header">
                     <h2><i class="fa-solid fa-ticket"></i> Configuración de Tickets</h2>
                 </div>
-                <div class="form-usuarios" style="margin-bottom:1rem;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.875rem; margin-bottom:1rem;">
                     <div class="form-field">
                         <label for="ticket_titulo_entrada">Título ticket de entrada</label>
                         <input type="text" id="ticket_titulo_entrada" placeholder="Ej. TICKET DE ENTRADA" style="text-transform:uppercase;">
