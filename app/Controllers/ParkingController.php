@@ -80,14 +80,16 @@ class ParkingController
 
         // Calcular según tipo de tarifa asignada
         if ($turnoId) {
-            $resultado = $this->turnosRepo->calcularCobro(
-                $turnoId,
-                $sesionGuardada->getHoraEntrada(),
-                $sesionGuardada->getHoraSalida()
-            );
+            $sesionTurno = $this->turnosRepo->obtenerSesionActivaTurno($sesionGuardada->getMatricula());
+            $resultado   = $sesionTurno
+                ? $this->turnosRepo->calcularCobroTurno($sesionTurno)
+                : $this->calculadora->calcularMonto($minutos, $sesionGuardada->getHoraEntrada());
         } elseif ($convenioId) {
-            $tarifaNormal = (float) ($this->calculadora->obtenerResumen()['normal']['precio'] ?? 25.50);
-            $resultado    = $this->turnosRepo->calcularCobroConvenio($convenioId, $minutos, $tarifaNormal);
+            $sesionConvenio = $this->turnosRepo->obtenerSesionActivaConvenio($sesionGuardada->getMatricula());
+            $tarifaNormal   = (float) ($this->calculadora->obtenerResumen()['normal']['precio'] ?? 25.50);
+            $resultado      = $sesionConvenio
+                ? $this->turnosRepo->calcularCobroConvenio($sesionConvenio, $tarifaNormal)
+                : $this->calculadora->calcularMonto($minutos, $sesionGuardada->getHoraEntrada());
         } else {
             $resultado = $this->calculadora->calcularMonto($minutos, $sesionGuardada->getHoraEntrada());
         }
