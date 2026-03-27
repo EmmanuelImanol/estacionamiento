@@ -334,20 +334,21 @@ class ParkingApp {
       return `
         <tr data-raw-fecha="${v.hora_entrada}">
           <td><span class="badge-matricula">${v.matricula}</span></td>
-          <td style="padding:0.75rem 0.5rem;">
-            <div style="font-size:0.8rem; color:${esAntiguo ? '#ef4444' : '#6b7280'};
-                        font-weight:${esAntiguo ? 'bold' : 'normal'};">
+          <td>
+            <div style="font-size:0.75rem; color:${esAntiguo ? '#ef4444' : '#94a3b8'}; font-weight:${esAntiguo ? '600' : '400'};">
               ${esAntiguo ? '⚠️ ' : ''}${fechaParte}
             </div>
-            <div style="font-size:0.95rem; font-weight:600;">${horaParte}</div>
-            ${v.observaciones
-              ? `<div style="font-size:0.75rem; color:#9ca3af; margin-top:2px;">
-                   ${v.observaciones}
-                 </div>`
-              : ''}
+            <div style="font-weight:600; font-size:0.9rem;">${horaParte}</div>
           </td>
           <td>
-            <button class="btn-tabla-salida" data-matricula="${v.matricula}">Cobrar</button>
+            ${v.observaciones
+              ? `<span class="obs-text">${v.observaciones}</span>`
+              : `<span style="color:#d1d5db;">—</span>`}
+          </td>
+          <td style="text-align:center;">
+            <button class="btn-tabla-salida" data-matricula="${v.matricula}">
+              <i class="fa-solid fa-cash-register"></i> Cobrar
+            </button>
           </td>
         </tr>`;
     }).join('');

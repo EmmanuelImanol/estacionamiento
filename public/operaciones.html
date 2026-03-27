@@ -3,13 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard — Estacionamiento</title>
+    <title>Entrada / Salida — Estacionamiento</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/animaciones.css">
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/modales.css">
     <link rel="stylesheet" href="css/toast.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <style>
+        /* Buscador sticky sobre tabla */
+        .buscador-sticky {
+            position: sticky;
+            top: 0;
+            background: var(--card-bg);
+            padding: 0 0 0.75rem;
+            z-index: 10;
+            transition: background 0.3s;
+        }
+        .buscador-sticky.scrolled {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        /* Tabla operaciones */
+        .tabla-ops { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+        .tabla-ops th {
+            background: #f8fafc;
+            padding: 0.65rem 0.875rem;
+            text-align: left;
+            font-size: 0.72rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.05em;
+            color: #64748b;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .tabla-ops td {
+            padding: 0.75rem 0.875rem;
+            border-bottom: 0.5px solid var(--border-color);
+            color: var(--text-color);
+            vertical-align: middle;
+        }
+        .tabla-ops tr:last-child td { border-bottom: none; }
+        .tabla-ops tr:hover td { background: #f8fafc; }
+        .obs-text { font-size: 0.75rem; color: #94a3b8; margin-top: 2px; }
+
+        /* Dark mode */
+        .dark-mode .buscador-sticky { background: #1a2235; }
+        .dark-mode .tabla-ops th { background: #182030; color: #475569; border-color: rgba(255,255,255,0.06); }
+        .dark-mode .tabla-ops td { border-color: rgba(255,255,255,0.04); color: #94a3b8; }
+        .dark-mode .tabla-ops tr:hover td { background: #1e2d45; }
+
+        /* Modal mejorado */
+        .modal-total-box {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            margin-top: 0.75rem;
+        }
+        .dark-mode .modal-total-box {
+            background: #052e16;
+            border-color: #166534;
+        }
+        .modal-total-label { font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem; }
+        .modal-total-valor { font-size: 2rem; font-weight: 700; color: #059669; }
+        .dark-mode .modal-total-valor { color: #4ade80; }
+
+        .modal-detalle-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 0.5px solid var(--border-color);
+            font-size: 0.875rem;
+        }
+        .modal-detalle-row:last-child { border-bottom: none; }
+        .modal-detalle-label { color: #64748b; display: flex; align-items: center; gap: 0.5rem; }
+        .modal-detalle-valor { font-weight: 600; color: var(--text-color); }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
     <div class="mobile-topbar" id="mobile-topbar"></div>
@@ -21,115 +90,69 @@
 
             <div class="page-header">
                 <div>
-                    <h1><i class="fa-solid fa-chart-line"></i> Dashboard</h1>
-                    <p class="page-subtitle">Resumen de operaciones e ingresos</p>
-                </div>
-                <div style="display:flex;gap:0.75rem;align-items:center;">
-                    <span id="nombre-usuario" style="font-size:0.85rem;color:#64748b;"></span>
-                    <span id="badge-rol" class="badge-rol"></span>
-                    <button class="btn btn-sm btn-outline" id="btn-logout">
-                        <i class="fa-solid fa-power-off"></i> Cerrar sesión
-                    </button>
+                    <h1><i class="fa-solid fa-ticket"></i> Entrada / Salida</h1>
+                    <p class="page-subtitle">Registra el acceso de vehículos al estacionamiento</p>
                 </div>
             </div>
 
-            <!-- Stats -->
-            <div class="stats-grid" id="stats-grid">
-                <div class="stat-card" style="--stat-color:#2563eb;">
-                    <div class="stat-icon"><i class="fa-solid fa-car"></i></div>
-                    <div class="stat-valor skeleton">&nbsp;</div>
-                    <div class="stat-label">Autos hoy</div>
-                </div>
-                <div class="stat-card" style="--stat-color:#22c55e;">
-                    <div class="stat-icon"><i class="fa-solid fa-circle-dot"></i></div>
-                    <div class="stat-valor skeleton">&nbsp;</div>
-                    <div class="stat-label">Adentro ahora</div>
-                </div>
-                <div class="stat-card" style="--stat-color:#f59e0b;">
-                    <div class="stat-icon"><i class="fa-solid fa-flag-checkered"></i></div>
-                    <div class="stat-valor skeleton">&nbsp;</div>
-                    <div class="stat-label">Salidas hoy</div>
-                </div>
-                <div class="stat-card" style="--stat-color:#059669;">
-                    <div class="stat-icon"><i class="fa-solid fa-sack-dollar"></i></div>
-                    <div class="stat-valor skeleton">&nbsp;</div>
-                    <div class="stat-label">Ingresos hoy</div>
-                </div>
-                <div class="stat-card solo-admin" style="--stat-color:#8b5cf6;">
-                    <div class="stat-icon"><i class="fa-solid fa-receipt"></i></div>
-                    <div class="stat-valor skeleton">&nbsp;</div>
-                    <div class="stat-label">Ticket promedio</div>
-                </div>
-            </div>
-
-            <!-- Gráfica (solo admin) -->
-            <div class="card-seccion solo-admin" id="seccion-grafica">
-                <div class="seccion-header">
-                    <h2><i class="fa-solid fa-chart-bar"></i> Ingresos</h2>
-                    <div class="tabs">
-                        <button class="tab activo" id="tab-horas">Por hora</button>
-                        <button class="tab" id="tab-dias">Últimos 7 días</button>
+            <!-- Formulario principal -->
+            <div class="card-seccion">
+                <form id="parking-form">
+                    <div class="form-field">
+                        <label for="matricula">Matrícula del vehículo</label>
+                        <input type="text" id="matricula"
+                               placeholder="Ej. ABC123" required autocomplete="off"
+                               style="text-transform:uppercase; font-size:1.15rem; font-weight:700;
+                                      letter-spacing:0.12em; text-align:center; padding:0.875rem;">
                     </div>
-                </div>
-                <canvas id="grafica-ingresos" height="100"></canvas>
+                    <div class="form-field">
+                        <label for="observaciones">Observaciones <span style="font-weight:400;color:#94a3b8;">(opcional)</span></label>
+                        <input type="text" id="observaciones"
+                               placeholder="Ej. Rojo, Sedan, Volkswagen Jetta"
+                               maxlength="255" autocomplete="off"
+                               style="text-transform:none;">
+                    </div>
+                    <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:0.25rem;">
+                        <button type="submit" class="btn btn-primary" data-action="entrada" style="flex:1; justify-content:center; min-width:160px;">
+                            <i class="fa-solid fa-arrow-right-to-bracket"></i> Registrar Entrada
+                        </button>
+                        <button type="submit" class="btn btn-secondary" data-action="salida" style="flex:1; justify-content:center; min-width:160px;">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i> Registrar Salida
+                        </button>
+                        <button type="submit" class="btn btn-sm btn-outline" data-action="buscar" style="white-space:nowrap;">
+                            <i class="fa-solid fa-magnifying-glass"></i> Buscar
+                        </button>
+                    </div>
+                </form>
+
+                <div id="resultado" class="resultado oculto" style="margin-top:0.875rem;"></div>
             </div>
 
-            <!-- Sesiones con filtros -->
+            <!-- Tabla de vehículos activos -->
             <div class="card-seccion">
                 <div class="seccion-header">
-                    <h2><i class="fa-solid fa-clock-rotate-left"></i> Sesiones</h2>
-                    <button class="btn btn-sm btn-outline" id="btn-refrescar">
-                        <i class="fa-solid fa-rotate"></i> Actualizar
-                    </button>
+                    <h2><i class="fa-solid fa-car"></i> Vehículos en el estacionamiento</h2>
+                    <span class="dot-live"><i class="fa-solid fa-circle"></i> En vivo</span>
                 </div>
 
-                <div class="filtros-contenedor">
-                    <div class="filtro-campo">
-                        <label for="filtro-desde">Desde</label>
-                        <input type="date" id="filtro-desde">
-                    </div>
-                    <div class="filtro-campo">
-                        <label for="filtro-hasta">Hasta</label>
-                        <input type="date" id="filtro-hasta">
-                    </div>
-                    <div class="filtro-campo">
-                        <label for="filtro-estado">Estado</label>
-                        <select id="filtro-estado">
-                            <option value="">Todos</option>
-                            <option value="ACTIVA">Activas</option>
-                            <option value="FINALIZADA">Finalizadas</option>
-                        </select>
-                    </div>
-                    <div class="filtro-botones">
-                        <button id="btn-filtrar" class="btn btn-primary">
-                            <i class="fa-solid fa-filter"></i> Filtrar
-                        </button>
-                        <button id="btn-limpiar-filtro" class="btn btn-sm btn-outline">
-                            <i class="fa-solid fa-xmark"></i> Limpiar
-                        </button>
-                        <button id="btn-exportar-csv" class="btn btn-sm btn-outline">
-                            <i class="fa-solid fa-file-csv"></i> CSV
-                        </button>
-                    </div>
+                <div class="buscador-sticky" id="buscador-sticky">
+                    <input type="text" id="input-busqueda"
+                           placeholder="Buscar por matrícula..."
+                           style="text-transform:uppercase;">
                 </div>
-
-                <div id="resumen-filtro" style="display:flex;justify-content:space-between;align-items:center;font-size:0.82rem;color:#64748b;margin-bottom:0.75rem;padding:0 0.25rem;"></div>
 
                 <div style="overflow-x:auto;">
-                    <table class="tabla-dashboard">
+                    <table class="tabla-ops">
                         <thead>
                             <tr>
                                 <th>Matrícula</th>
-                                <th>Conductor</th>
-                                <th>Entrada</th>
-                                <th>Salida</th>
-                                <th>Tiempo</th>
-                                <th>Total</th>
-                                <th>Estado</th>
+                                <th>Hora de entrada</th>
+                                <th>Observaciones</th>
+                                <th style="text-align:center; width:100px;">Acción</th>
                             </tr>
                         </thead>
-                        <tbody id="tbody-sesiones">
-                            <tr><td colspan="7" class="td-cargando">Cargando...</td></tr>
+                        <tbody id="tbody-vehiculos">
+                            <tr><td colspan="4" class="td-cargando">Cargando...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -138,10 +161,86 @@
         </div>
     </div>
 
+    <!-- Modal confirmar salida -->
+    <div id="modal-salida" class="modal-overlay oculto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-arrow-right-from-bracket"></i> Confirmar Salida</h3>
+                <button class="modal-cerrar" onclick="document.getElementById('modal-salida').classList.add('oculto')">✕</button>
+            </div>
+            <div class="modal-body">
+                <!-- Matrícula -->
+                <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px;
+                            padding:0.875rem; text-align:center; margin-bottom:1rem;">
+                    <div style="font-size:0.72rem; color:#64748b; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.25rem;">Vehículo</div>
+                    <div id="modal-matricula-texto"
+                         style="font-size:1.5rem; font-weight:700; color:#1d4ed8;
+                                letter-spacing:0.12em; font-family:monospace;"></div>
+                </div>
+                <!-- Detalles -->
+                <div style="background:var(--bg-color,#f8fafc); border:1px solid var(--border-color,#e2e8f0); border-radius:10px; padding:0.875rem; margin-bottom:0.75rem;">
+                    <div class="modal-detalle-row">
+                        <span class="modal-detalle-label"><i class="fa-regular fa-clock" style="color:#2563eb;"></i> Hora de entrada</span>
+                        <span class="modal-detalle-valor" id="modal-entrada-texto">—</span>
+                    </div>
+                    <div class="modal-detalle-row">
+                        <span class="modal-detalle-label"><i class="fa-solid fa-hourglass-half" style="color:#f59e0b;"></i> Tiempo transcurrido</span>
+                        <span class="modal-detalle-valor" id="modal-tiempo-texto">—</span>
+                    </div>
+                </div>
+                <!-- Total -->
+                <div class="modal-total-box">
+                    <div class="modal-total-label">TOTAL A COBRAR</div>
+                    <div class="modal-total-valor" id="modal-cobro-texto">—</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-cancelar" id="btn-modal-cancelar">
+                    <i class="fa-solid fa-xmark"></i> Cancelar
+                </button>
+                <button class="btn btn-secondary" id="btn-modal-confirmar">
+                    <i class="fa-solid fa-check"></i> Confirmar Salida
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal cliente frecuente -->
+    <div id="modal-cliente" class="modal-overlay oculto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-star" style="color:#f59e0b;"></i> Cliente Frecuente</h3>
+                <button class="modal-cerrar" id="modal-cliente-cerrar">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:0.875rem; text-align:center; margin-bottom:1rem;">
+                    <div style="font-size:0.72rem; color:#64748b; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.25rem;">Matrícula</div>
+                    <strong id="modal-cliente-matricula"
+                            style="font-size:1.2rem; color:#1d4ed8; font-family:monospace; letter-spacing:0.1em;"></strong>
+                </div>
+                <div class="form-field">
+                    <label for="modal-cliente-nombre">Nombre del conductor</label>
+                    <input type="text" id="modal-cliente-nombre"
+                           placeholder="Ej. Juan Pérez"
+                           style="text-transform:none;">
+                </div>
+                <div id="modal-cliente-historial" style="margin-top:0.75rem;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-cancelar" id="modal-cliente-cancelar">
+                    <i class="fa-solid fa-forward"></i> Omitir
+                </button>
+                <button class="btn btn-primary" id="modal-cliente-guardar">
+                    <i class="fa-solid fa-floppy-disk"></i> Guardar y continuar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { inicializarSidebar } from './js/sidebar.js';
-        inicializarSidebar('dashboard');
+        inicializarSidebar('operaciones');
     </script>
-    <script type="module" src="js/dashboard.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
