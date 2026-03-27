@@ -116,7 +116,12 @@ class ParkingRepository
         $row = $stmt->fetch();
 
         if ($row) {
-            return new ParkingSession($row['matricula'], $row['hora_entrada']);
+            return new ParkingSession(
+                $row['matricula'],
+                $row['hora_entrada'],
+                $row['turno_id']    ? (int) $row['turno_id']    : null,
+                $row['convenio_id'] ? (int) $row['convenio_id'] : null
+            );
         }
 
         return null;

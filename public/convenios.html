@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convenios — Estacionamiento</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/animaciones.css">
+    <link rel="stylesheet" href="css/usuarios.css">
+    <link rel="stylesheet" href="css/modales.css">
+    <link rel="stylesheet" href="css/toast.css">
+</head>
+<body>
+    <div class="mobile-topbar" id="mobile-topbar"></div>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <div class="main-content">
+        <div class="main-inner">
+
+            <div class="page-header">
+                <div>
+                    <h1>🤝 Convenios</h1>
+                    <p class="page-subtitle">Empresas con horas gratuitas incluidas</p>
+                </div>
+                <button id="btn-nuevo-convenio" class="btn btn-primary">+ Nuevo Convenio</button>
+            </div>
+
+            <div id="convenio-msg" class="usuario-msg oculto"></div>
+
+            <!-- Tabla de convenios -->
+            <div class="card-seccion">
+                <div class="seccion-header">
+                    <h2>📋 Convenios registrados</h2>
+                    <button class="btn-sm btn-outline" id="btn-refrescar">↻ Actualizar</button>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="tabla-usuarios">
+                        <thead>
+                            <tr>
+                                <th>Empresa</th>
+                                <th>Horas gratuitas</th>
+                                <th>Contacto</th>
+                                <th>Notas</th>
+                                <th>Estado</th>
+                                <th class="col-accion">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-convenios">
+                            <tr><td colspan="6" class="td-cargando">Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tabla de registros de convenios -->
+            <div class="card-seccion">
+                <div class="seccion-header">
+                    <h2>📝 Registro de uso</h2>
+                    <div style="display:flex; gap:0.5rem; align-items:center;">
+                        <select id="filtro-convenio-id" class="btn-sm btn-outline"
+                                style="font-size:0.8rem; padding:0.35rem 0.6rem;
+                                       border:1px solid var(--border-color); border-radius:6px;
+                                       background:white; color:var(--text-color); cursor:pointer;">
+                            <option value="">Todos los convenios</option>
+                        </select>
+                        <button class="btn-sm btn-outline" id="btn-refrescar-registros">↻</button>
+                    </div>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="tabla-usuarios">
+                        <thead>
+                            <tr>
+                                <th>Matrícula</th>
+                                <th>Empresa</th>
+                                <th>Entrada</th>
+                                <th>Salida</th>
+                                <th>H. gratuitas</th>
+                                <th>Total cobrado</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-registros-convenios">
+                            <tr><td colspan="7" class="td-cargando">Cargando...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal crear/editar convenio -->
+    <div id="modal-convenio" class="modal-overlay oculto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-convenio-titulo">➕ Nuevo Convenio</h3>
+                <button class="modal-cerrar" id="btn-cerrar-modal-convenio">✕</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="convenio-id">
+                <div class="form-field" style="margin-bottom:0.85rem;">
+                    <label for="convenio-empresa">Nombre de la empresa</label>
+                    <input type="text" id="convenio-empresa" placeholder="Ej. Empresa Ejemplo S.A.">
+                </div>
+                <div class="form-field" style="margin-bottom:0.85rem;">
+                    <label for="convenio-horas">Horas gratuitas incluidas</label>
+                    <input type="number" id="convenio-horas" min="0.5" max="24" step="0.5"
+                           placeholder="2.0" style="text-transform:none;">
+                    <span style="font-size:0.75rem; color:#6b7280; margin-top:0.25rem; display:block;">
+                        Las primeras X horas no se cobran. El tiempo restante se cobra a tarifa normal.
+                    </span>
+                </div>
+                <div class="form-field" style="margin-bottom:0.85rem;">
+                    <label for="convenio-contacto">Contacto <span style="font-weight:400;color:#9ca3af;">(opcional)</span></label>
+                    <input type="text" id="convenio-contacto" placeholder="Ej. Juan Pérez / contacto@empresa.com">
+                </div>
+                <div class="form-field">
+                    <label for="convenio-notas">Notas <span style="font-weight:400;color:#9ca3af;">(opcional)</span></label>
+                    <input type="text" id="convenio-notas" placeholder="Ej. Solo aplica en días hábiles">
+                </div>
+            </div>
+            <div id="modal-convenio-msg" class="usuario-msg oculto"></div>
+            <div class="modal-footer">
+                <button class="btn btn-cancelar" id="btn-cancelar-convenio">Cancelar</button>
+                <button class="btn btn-primary"  id="btn-guardar-convenio">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { inicializarSidebar } from './js/sidebar.js';
+        inicializarSidebar('convenios');
+    </script>
+    <script type="module" src="js/convenios.js"></script>
+</body>
+</html>

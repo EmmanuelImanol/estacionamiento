@@ -63,6 +63,7 @@ use App\Controllers\ParkingController;
 use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
 use App\Controllers\ConfigController;
+use App\Controllers\TurnosController;
 use App\Middleware\AuthMiddleware;
 use App\Views\JsonResponse;
 
@@ -70,113 +71,146 @@ $parkingController   = new ParkingController();
 $authController      = new AuthController();
 $dashboardController = new DashboardController();
 $configController    = new ConfigController();
+$turnosController    = new TurnosController();
 
 $action    = $_GET['action']    ?? '';
 $matricula = $_GET['matricula'] ?? null;
 
-switch ($action) {
+match ($action) {
 
     // ── Rutas PÚBLICAS ────────────────────────────────────────
-    case 'login':
-        $authController->login();
-        break;
+    'login'  => $authController->login(),
+    'logout' => $authController->logout(),
 
-    case 'logout':
-        $authController->logout();
-        break;
-
-    // ── Rutas PROTEGIDAS ──────────────────────────────────────
-    case 'entrada':
+    // ── Operaciones ───────────────────────────────────────────
+    'entrada' => (function () use ($parkingController, $matricula) {
         AuthMiddleware::verificar();
         if (!$matricula) JsonResponse::send(['error' => 'Matrícula requerida'], 400);
         $parkingController->registrarEntrada($matricula);
-        break;
+    })(),
 
-    case 'salida':
+    'salida' => (function () use ($parkingController, $matricula) {
         AuthMiddleware::verificar();
         if (!$matricula) JsonResponse::send(['error' => 'Matrícula requerida'], 400);
         $parkingController->registrarSalida($matricula);
-        break;
+    })(),
 
-    case 'listar':
+    'listar' => (function () use ($parkingController) {
         AuthMiddleware::verificar();
         $parkingController->listarActivos();
-        break;
+    })(),
 
-    case 'clientes':
+    'clientes' => (function () use ($parkingController) {
         AuthMiddleware::verificar();
         $parkingController->registrarNuevoCliente();
-        break;
+    })(),
 
-    case 'clientes.frecuentes':
+    'clientes.frecuentes' => (function () use ($parkingController) {
         AuthMiddleware::verificar();
         $parkingController->listarClientesFrecuentes();
-        break;
+    })(),
 
-    case 'clientes.historial':
+    'clientes.historial' => (function () use ($parkingController, $matricula) {
         AuthMiddleware::verificar();
         if (!$matricula) JsonResponse::send(['error' => 'Matrícula requerida'], 400);
         $parkingController->obtenerHistorial($matricula);
-        break;
+    })(),
 
-    // ── Dashboard ─────────────────────────────────────────────
-    case 'dashboard.resumen':
-        AuthMiddleware::verificar();
-        $dashboardController->obtenerResumen();
-        break;
-
-    case 'dashboard.grafica':
-        AuthMiddleware::soloAdmin();
-        $dashboardController->obtenerGrafica();
-        break;
-
-    case 'dashboard.sesiones':
-        AuthMiddleware::verificar();
-        $dashboardController->obtenerSesionesRecientes();
-        break;
-
-    case 'dashboard.sesiones.filtro':
-        AuthMiddleware::verificar();
-        $dashboardController->obtenerSesionesFiltradas();
-        break;
-
-    case 'dashboard.exportar':
-        AuthMiddleware::verificar();
-        $dashboardController->exportarSesiones();
-        break;
-
-    // ── Solo Admin ────────────────────────────────────────────
-    case 'usuarios.listar':
-        $authController->listarUsuarios();
-        break;
-
-    case 'usuarios.crear':
-        $authController->crearUsuario();
-        break;
-
-    case 'usuarios.editar':
-        $authController->editarUsuario();
-        break;
-
-    case 'usuarios.desactivar':
-        $authController->desactivarUsuario();
-        break;
-
-    case 'tarifas':
+    'tarifas' => (function () use ($parkingController) {
         AuthMiddleware::verificar();
         $parkingController->obtenerTarifas();
-        break;
+    })(),
 
-    case 'config.obtener':
+    // ── Dashboard ─────────────────────────────────────────────
+    'dashboard.resumen' => (function () use ($dashboardController) {
+        AuthMiddleware::verificar();
+        $dashboardController->obtenerResumen();
+    })(),
+
+    'dashboard.grafica' => (function () use ($dashboardController) {
+        AuthMiddleware::soloAdmin();
+        $dashboardController->obtenerGrafica();
+    })(),
+
+    'dashboard.sesiones' => (function () use ($dashboardController) {
+        AuthMiddleware::verificar();
+        $dashboardController->obtenerSesionesRecientes();
+    })(),
+
+    'dashboard.sesiones.filtro' => (function () use ($dashboardController) {
+        AuthMiddleware::verificar();
+        $dashboardController->obtenerSesionesFiltradas();
+    })(),
+
+    'dashboard.exportar' => (function () use ($dashboardController) {
+        AuthMiddleware::verificar();
+        $dashboardController->exportarSesiones();
+    })(),
+
+    // ── Usuarios (solo admin) ─────────────────────────────────
+    'usuarios.listar'    => $authController->listarUsuarios(),
+    'usuarios.crear'     => $authController->crearUsuario(),
+    'usuarios.editar'    => $authController->editarUsuario(),
+    'usuarios.desactivar'=> $authController->desactivarUsuario(),
+
+    // ── Turnos ────────────────────────────────────────────────
+    'turnos.listar' => (function () use ($turnosController) {
+        AuthMiddleware::verificar();
+        $turnosController->listarTurnos();
+    })(),
+
+    'turnos.activos' => (function () use ($turnosController) {
+        AuthMiddleware::verificar();
+        $turnosController->listarTurnosActivos();
+    })(),
+
+    'turnos.crear'    => $turnosController->crearTurno(),
+    'turnos.editar'   => $turnosController->editarTurno(),
+    'turnos.toggle'   => $turnosController->toggleTurno(),
+    'turnos.entrada'  => $turnosController->registrarEntradaTurno(),
+    'turnos.salida'   => $turnosController->registrarSalidaTurno(),
+
+    'turnos.registros' => (function () use ($turnosController) {
+        AuthMiddleware::verificar();
+        $turnosController->registrosTurnos();
+    })(),
+
+    'turnos.stats' => (function () use ($turnosController) {
+        AuthMiddleware::verificar();
+        $turnosController->statsTurnos();
+    })(),
+
+    // ── Convenios ─────────────────────────────────────────────
+    'convenios.listar' => (function () use ($turnosController) {
+        AuthMiddleware::verificar();
+        $turnosController->listarConvenios();
+    })(),
+
+    'convenios.activos' => (function () use ($turnosController) {
+        AuthMiddleware::verificar();
+        $turnosController->listarConveniosActivos();
+    })(),
+
+    'convenios.crear'   => $turnosController->crearConvenio(),
+    'convenios.editar'  => $turnosController->editarConvenio(),
+    'convenios.toggle'  => $turnosController->toggleConvenio(),
+    'convenios.entrada' => $turnosController->registrarEntradaConvenio(),
+    'convenios.salida'  => $turnosController->registrarSalidaConvenio(),
+
+    'convenios.registros' => (function () use ($turnosController) {
+        AuthMiddleware::verificar();
+        $turnosController->registrosConvenios();
+    })(),
+
+    // ── Configuración ─────────────────────────────────────────
+    'config.obtener' => (function () use ($configController) {
         AuthMiddleware::verificar();
         $configController->obtener();
-        break;
+    })(),
 
-    case 'config.guardar':
-        $configController->guardar();
-        break;
+    'config.guardar' => $configController->guardar(),
 
-    default:
-        JsonResponse::send(['error' => 'Acción no válida'], 400);
-        break;
-}
+    // ── Default ───────────────────────────────────────────────
+    default => JsonResponse::send(['error' => 'Acción no válida'], 400),
+
+};

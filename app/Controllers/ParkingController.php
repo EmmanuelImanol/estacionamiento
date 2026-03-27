@@ -5,17 +5,20 @@ namespace App\Controllers;
 use App\Models\ParkingSession;
 use App\Models\TarifaCalculator;
 use App\Repositories\ParkingRepository;
+use App\Repositories\TurnosRepository;
 use App\Views\JsonResponse;
 
 class ParkingController
 {
     private TarifaCalculator  $calculadora;
     private ParkingRepository $repository;
+    private TurnosRepository  $turnosRepo;
 
     public function __construct()
     {
         $this->calculadora = new TarifaCalculator();
         $this->repository  = new ParkingRepository();
+        $this->turnosRepo  = new TurnosRepository();
     }
 
     public function registrarEntrada(string $matricula): void
@@ -72,10 +75,26 @@ class ParkingController
         $sesionGuardada->registrarSalida();
 
         $minutos    = $sesionGuardada->getMinutosTranscurridos();
-        $resultado  = $this->calculadora->calcularMonto($minutos, $sesionGuardada->getHoraEntrada());
+        $turnoId    = $sesionGuardada->getTurnoId();
+        $convenioId = $sesionGuardada->getConvenioId();
+
+        // Calcular según tipo de tarifa asignada
+        if ($turnoId) {
+            $resultado = $this->turnosRepo->calcularCobro(
+                $turnoId,
+                $sesionGuardada->getHoraEntrada(),
+                $sesionGuardada->getHoraSalida()
+            );
+        } elseif ($convenioId) {
+            $tarifaNormal = (float) ($this->calculadora->obtenerResumen()['normal']['precio'] ?? 25.50);
+            $resultado    = $this->turnosRepo->calcularCobroConvenio($convenioId, $minutos, $tarifaNormal);
+        } else {
+            $resultado = $this->calculadora->calcularMonto($minutos, $sesionGuardada->getHoraEntrada());
+        }
+
         $totalPagar = $resultado['monto'];
-        $tipoTarifa = $resultado['tipo'];
-        $detalle    = $resultado['detalle'];
+        $tipoTarifa = $resultado['tipo'] ?? 'normal';
+        $detalle    = $resultado['detalle'] ?? '';
 
         if ($this->repository->actualizarSalida($sesionGuardada, $totalPagar, $tipoTarifa)) {
             JsonResponse::send([
@@ -89,7 +108,7 @@ class ParkingController
                     'total_pagar'    => $totalPagar,
                     'tarifa_tipo'    => $tipoTarifa,
                     'tarifa_detalle' => $detalle,
-                    'gratuito'       => $resultado['gratuito'],
+                    'gratuito'       => $resultado['gratuito'] ?? false,
                 ]
             ]);
         } else {

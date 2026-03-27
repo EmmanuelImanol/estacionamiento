@@ -1,3 +1,5 @@
+// js/sidebar.js
+
 export function inicializarSidebar(paginaActual) {
     const nombre = sessionStorage.getItem('usuario_nombre') || '';
     const rol    = sessionStorage.getItem('usuario_rol')    || '';
@@ -46,6 +48,16 @@ export function inicializarSidebar(paginaActual) {
             <a href="frecuentes.html" class="sidebar-link ${paginaActual === 'frecuentes' ? 'active' : ''}">
                 <span class="sidebar-link-icon">★</span>
                 <span class="sidebar-link-label">Frecuentes</span>
+            </a>
+
+            <a href="turnos.html" class="sidebar-link ${paginaActual === 'turnos' ? 'active' : ''}">
+                <span class="sidebar-link-icon">⏱</span>
+                <span class="sidebar-link-label">Turnos</span>
+            </a>
+
+            <a href="convenios.html" class="sidebar-link ${paginaActual === 'convenios' ? 'active' : ''}">
+                <span class="sidebar-link-icon">🤝</span>
+                <span class="sidebar-link-label">Convenios</span>
             </a>
 
             ${rol === 'admin' ? `
@@ -119,7 +131,7 @@ export function inicializarSidebar(paginaActual) {
     // ── Logout ────────────────────────────────────────────────
     document.getElementById('sidebar-logout-btn')?.addEventListener('click', async () => {
         try {
-            const url = new URL('/estacionamiento/api.php', window.location.origin);
+            const url = new URL('api.php', window.location.origin);
             url.searchParams.append('action', 'logout');
             await fetch(url);
         } finally {
@@ -138,7 +150,7 @@ export function inicializarSidebar(paginaActual) {
     // ── Contador de autos en tiempo real ──────────────────────
     async function actualizarContador() {
         try {
-            const url = new URL('/estacionamiento/api.php', window.location.origin);
+            const url = new URL('api.php', window.location.origin);
             url.searchParams.append('action', 'listar');
             const res  = await fetch(url);
             const data = await res.json();
