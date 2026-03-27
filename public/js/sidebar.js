@@ -1,5 +1,3 @@
-// js/sidebar.js
-
 export function inicializarSidebar(paginaActual) {
     const nombre = sessionStorage.getItem('usuario_nombre') || '';
     const rol    = sessionStorage.getItem('usuario_rol')    || '';
@@ -131,7 +129,7 @@ export function inicializarSidebar(paginaActual) {
     // ── Logout ────────────────────────────────────────────────
     document.getElementById('sidebar-logout-btn')?.addEventListener('click', async () => {
         try {
-            const url = new URL('api.php', window.location.origin);
+            const url = new URL(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '/api.php' : '/estacionamiento/api.php', window.location.origin);
             url.searchParams.append('action', 'logout');
             await fetch(url);
         } finally {
@@ -150,7 +148,7 @@ export function inicializarSidebar(paginaActual) {
     // ── Contador de autos en tiempo real ──────────────────────
     async function actualizarContador() {
         try {
-            const url = new URL('api.php', window.location.origin);
+            const url = new URL(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '/api.php' : '/estacionamiento/api.php', window.location.origin);
             url.searchParams.append('action', 'listar');
             const res  = await fetch(url);
             const data = await res.json();
