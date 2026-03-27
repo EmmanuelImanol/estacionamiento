@@ -35,26 +35,26 @@
                 <div class="seccion-header">
                     <h2><i class="fa-solid fa-car"></i> Registrar entrada / salida</h2>
                 </div>
-                <div style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:flex-end;">
-                    <div style="flex:1;min-width:180px;">
+                <div style="display:grid; grid-template-columns:1fr 1fr 1.5fr auto; gap:0.75rem; align-items:flex-end;">
+                    <div>
                         <label for="reg-turno-select">Turno</label>
                         <select id="reg-turno-select">
                             <option value="">Selecciona un turno...</option>
                         </select>
                     </div>
-                    <div style="flex:1;min-width:130px;">
+                    <div>
                         <label for="reg-turno-matricula">Matrícula</label>
                         <input type="text" id="reg-turno-matricula"
                                placeholder="Ej. ABC123" maxlength="10"
                                style="text-transform:uppercase;">
                     </div>
-                    <div style="flex:2;min-width:160px;">
+                    <div>
                         <label for="reg-turno-obs">Observaciones <span style="font-weight:400;color:#94a3b8;">(opcional)</span></label>
                         <input type="text" id="reg-turno-obs"
                                placeholder="Color, modelo..." maxlength="255"
                                style="text-transform:none;">
                     </div>
-                    <div style="display:flex;gap:0.5rem;align-items:flex-end;">
+                    <div style="display:flex; gap:0.5rem; padding-bottom:1px;">
                         <button id="btn-entrada-turno" class="btn btn-primary">
                             <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrada
                         </button>

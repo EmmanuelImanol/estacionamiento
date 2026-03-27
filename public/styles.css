@@ -263,3 +263,17 @@ table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* ── Grid de registro turnos/convenios responsive ───────────── */
+@media (max-width: 900px) {
+    [style*="grid-template-columns:1fr 1fr 1.5fr auto"],
+    [style*="grid-template-columns:1.5fr 1fr 1.5fr auto"] {
+        grid-template-columns: 1fr 1fr !important;
+    }
+}
+@media (max-width: 600px) {
+    [style*="grid-template-columns:1fr 1fr 1.5fr auto"],
+    [style*="grid-template-columns:1.5fr 1fr 1.5fr auto"] {
+        grid-template-columns: 1fr !important;
+    }
+}
